@@ -227,6 +227,36 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
+  /liveEvents/{liveEventId}/desintations:
+    get:
+      summary: live Event Destination URLs
+      tags:
+        - liveEvents
+      description: Returns a URL endpoints of a liveEvent
+      operationId: getLiveEventDestinationUrlById
+      parameters:
+        - name: liveEventId
+          in: path
+          description: ID of liveEvent to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/destinationUrls'          
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: live Event not found
   /liveEvents/eventSchedules:
     get:
       summary: list of all recorded events
@@ -413,45 +443,11 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/liveEventDestination/{liveEventId}:
-    get:
-      summary: live Event Destination URLs
-      tags:
-        - destinationUrls
-      description: Returns a URL endpoints of a liveEvent
-      operationId: getLiveEventDestinationUrlById
-      parameters:
-        - name: liveEventId
-          in: path
-          description: ID of liveEvent to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/destinationUrls'          
-        '400':
-          description: Invalid ID supplied
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: live Event not found
-      security:
-        - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/eventScheduleDestination/{eventScheduleId}:
+  /liveEvents/{eventScheduleId}/destinations:
     get:
       summary: event schedule Destination URLs
       tags:
-        - destinationUrls
+        - liveEventSchedules
       description: Returns a URL endpoints of a eventSchedule
       operationId: getEventScheduleDestinationUrlById
       parameters:
@@ -519,6 +515,7 @@ components:
           properties:
             preview:
               type: object
+              readOnly: true
               properties:
                 srtUrl:
                   type: string
