@@ -1,0 +1,842 @@
+openapi: 3.0.3
+info:
+  title: VOS360-Lite Public API
+  description: |-
+    This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
+
+    - liveEvents
+    - liveEventSchedules
+    - destinationUrls
+    - file
+    - drm
+    - endpoint
+    
+  termsOfService: https://www.vos360-lite.video/terms/
+  contact:
+    email: vos360lite_api@vos360.video
+  license:
+    name: vos360-lite
+    url: https://www.vos360-lite.video/licenses/LICENSE-1.0.html
+  version: 1.0.0
+externalDocs:
+  description: VOS360-Lite Documentation
+  url: https://www.vos360-lite.video/doc
+servers: 
+  - url: https://www.vos360-lite.video/api/v1
+tags:
+  - name: liveEvents
+  - name: liveEventSchedules
+  - name: destinationUrls
+  - name: file
+  - name: presets
+paths:
+  /liveEvents:
+    get:
+      summary: list all the liveEvents
+      tags:
+        - liveEvents
+      description: list all the liveEvents
+      operationId: listLiveEvents
+      parameters:
+        - in: query
+          name: liveEventId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: liveEventName
+          schema:
+            type: string
+        - in: query
+          name: controlState
+          schema:
+            type: string
+            enum:
+            - Activated
+            - Test
+            - Off
+        - in: query
+          name: operationState
+          schema:
+            type: string
+            enum:
+            - Off
+            - Deploy
+            - Error
+            - On
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of live events with status
+                readOnly: true
+                items:
+                  type: object
+                  properties:
+                    liveEventId: 
+                      type: string
+                      format: uuid
+                    liveEventName:
+                      type: string
+                      example: Company Town Hall
+                    controlState:
+                      type: string
+                      example: Activated
+                      enum:
+                      - Activated
+                      - Test
+                      - Off
+                    operationState:
+                      type: string
+                      example: On
+                      enum:
+                      - Deploy
+                      - On
+                      - Off
+                      - Error
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden      
+    post:
+      summary: Create a liveEvent
+      tags:
+        - liveEvents
+      description: create a liveEvent
+      operationId: createLiveEvent
+      requestBody:
+        description: Create a new liveEvent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/liveEvent'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/liveEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+  /liveEvents/{liveEventId}:
+    get:
+      summary: Find liveEvent by ID
+      tags:
+        - liveEvents 
+      description: Returns a single liveEvent
+      operationId: getLiveEventById
+      parameters:
+        - name: liveEventId
+          in: path
+          description: ID of liveEvent to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/liveEvent'          
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: liveEvent not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+    put:
+      summary: Updates a liveEvent
+      tags:
+        - liveEvents
+      description: Updates a single liveEvent
+      operationId: updateLiveEventById
+      parameters:
+        - name: liveEventId
+          in: path
+          description: ID of liveEvent to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Create a new liveEvent
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/liveEvent'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid liveEventId value
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: liveEvent not found
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+    delete:
+      summary: Deletes a liveEvent
+      tags:
+        - liveEvents
+      description: delete a liveEvent
+      operationId: deleteLiveEvent
+      parameters:
+        - name: liveEventId
+          in: path
+          description: ID of liveEvent to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid liveEventId value
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: liveEvent not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/eventSchedules:
+    get:
+      summary: list of all recorded events
+      tags:
+        - liveEventSchedules
+      description: list all recorded events
+      operationId: listEventSchedules
+      parameters:
+        - in: query
+          name: liveEventId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: eventScheduleName
+          schema:
+            type: string
+        - in: query
+          name: eventScheduleId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: state
+          schema:
+            type: string
+            enum:
+            - Ready
+            - Unavailable
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of recordings with status
+                readOnly: true
+                items:
+                  type: object
+                  properties:
+                    eventScheduleId: 
+                      type: string
+                      format: uuid
+                    eventScheduleName:
+                      type: string
+                      example: Keynote
+                    liveEventId:
+                      type: string
+                      format: uuid
+                    state:
+                      type: string
+                      example: On
+                      enum:
+                      - Ready
+                      - Unavailable
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden 
+    post:
+      summary: Create a event schedule
+      tags:
+        - liveEventSchedules
+      description: create a event schedule
+      operationId: createEventSchedule
+      requestBody:
+        description: Create a new event schedule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventScheduler'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventScheduler'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+  /liveEvents/eventSchedules/{eventScheduleId}:
+    get:
+      summary: Find event schedule by ID
+      tags:
+        - liveEventSchedules
+      description: Returns a single event schedule
+      operationId: getEventScheduleById
+      parameters:
+        - name: eventScheduleId
+          in: path
+          description: ID of event schedule to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/eventScheduler'          
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: eventSchedule not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+    put:
+      summary: Updates a event schedule
+      tags:
+        - liveEventSchedules
+      description: Updates a single event schedule
+      operationId: updateEventScheduleById
+      parameters:
+        - name: eventScheduleId
+          in: path
+          description: ID of eventSchedule to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: modify a eventSchedule
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/eventScheduler'
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid eventScheduleId value
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: eventSchedule not found
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+    delete:
+      summary: Deletes a eventSchedule
+      tags:
+        - liveEventSchedules
+      description: delete a eventSchedule
+      operationId: deleteEventSchedule
+      parameters:
+        - name: eventScheduleId
+          in: path
+          description: ID of eventSchedule to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+        '400':
+          description: Invalid eventScheduleId value
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: eventSchedule not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/destinationUrls/liveEventDestination/{liveEventId}:
+    get:
+      summary: live Event Destination URLs
+      tags:
+        - destinationUrls
+      description: Returns a URL endpoints of a liveEvent
+      operationId: getLiveEventDestinationUrlById
+      parameters:
+        - name: liveEventId
+          in: path
+          description: ID of liveEvent to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/destinationUrls'          
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: live Event not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/destinationUrls/eventScheduleDestination/{eventScheduleId}:
+    get:
+      summary: event schedule Destination URLs
+      tags:
+        - destinationUrls
+      description: Returns a URL endpoints of a eventSchedule
+      operationId: getEventScheduleDestinationUrlById
+      parameters:
+        - name: eventScheduleId
+          in: path
+          description: ID of Event Schedule to return
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/destinationUrls'          
+        '400':
+          description: Invalid ID supplied
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '404':
+          description: eventSchedule not found
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+components:
+  schemas:
+    liveEvent:
+      type: object
+      properties:
+        liveEventId:
+          type: string
+          format: uuid
+          example: 34fd01fc-fee6-11ed-be56-0242ac120002
+          readOnly: true
+        liveEventName:
+          type: string
+          description: simple name of the liveEvent
+          example: College Football 
+        controlState:
+          type: string
+          description: liveEvent Control State
+          example: Activated
+          enum:
+            - Activated
+            - Test
+            - Off
+        operationState:
+          type: string
+          description: liveEvent Operation State
+          example: On
+          readOnly: true
+          enum:
+            - Off
+            - Deploy
+            - Error
+            - On
+        ingest:
+          type: object
+          description: liveEvent ingest object
+          properties:
+            preview:
+              type: object
+              properties:
+                srtUrl:
+                  type: string
+                  format: url
+                  readOnly: true
+                webrtcUrl:
+                  type: string
+                  format: url
+                  readOnly: true
+            input:
+              type: object
+              description: liveEvent inputs, failover from primary to backup is triggered by loss of input.  auto-revert back to primary input
+              properties:
+                protocol:
+                  type: string
+                  description: liveEvent input protocol
+                  example: srt
+                  enum:
+                    - srt
+                    - rtmp
+                protocolParameters:
+                  type: object
+                  description: protocol specifics
+                  properties:
+                    encryptionMode:
+                      type: string
+                      description: SRT AES encryption modes
+                      example: AES128
+                      enum:
+                        - NONE
+                        - AES128
+                        - AES192
+                        - AES256
+                    passphrase:
+                      type: string
+                      description: passphrase of SRT encryption
+                    streamKey:
+                      type: string
+                      description: rtmp streamKey                    
+                multiBitrate:
+                  type: object
+                  description: object to store config for multi-bitrate input
+                  properties:
+                    enableMultibitrate:
+                      type: boolean
+                      example: false
+                    numberOfProfiles:
+                      type: integer
+                      example: 3
+                      minimum: 2
+                      maximum: 20
+                primaryInputUrl:
+                      type: string
+                      format: url
+                      description: URL for primary input
+                      readOnly: true
+                backupInputUrl:
+                      type: string
+                      format: url
+                      description: URL for backup input
+                      readOnly: true
+              required: [protocol]
+        liveEventTranscode:
+          type: object
+          description: object to store the transcoding profile configuration
+          properties:
+            liveEventTranscodeProfile:
+              type: string
+              description: the encoding profile for this liveEvent
+              example: Standard
+              enum:
+              - Standard
+              - Premium
+              - Passthrough
+            liveTranscription:
+              type: object
+              description: speech to text transcription to insert to CEA608/708
+              properties:
+                enableLiveTranscription:
+                  type: boolean
+                  example: true
+                language:
+                  type: string
+                  example: eng
+            inputLossSlate:
+              type: object
+              description: slate image to cover the screen when input signal loss when transcoding is in used
+              properties:
+                enableInputLossSlate:
+                  type: boolean
+                  example: true
+                imageUrl:
+                  type: string
+                  format: url
+          required: [liveEventTranscodeProfile]
+        liveEventDestinationProfile:
+          type: object
+          description: multiple packaging profile configuration
+          properties:
+            output:
+              type: array
+              description: list of packages profile configuration
+              items:
+                type: object
+                description: each output is a package
+                properties:
+                  destinationOutputId:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  encryptionMethod:
+                    type: string
+                    example: CENC 
+                    enum:
+                    - Clear
+                    - AES
+                    - Fairplay
+                    - CENC
+                  drmDatapathConfig:
+                    type: string
+                    example: CBC
+                    enum:
+                      - CBC
+                      - CTR
+                  package:
+                    type: string
+                    example: cmaf-dash
+                    enum:
+                      - cmaf-hls
+                      - cmaf-dash
+                      - hls-ts
+                      - dash
+                      - ll-hls
+                      - dash-ll
+                      - hss
+                  embeddedSubtitle:
+                    type: string
+                    example: webvtt
+                    enum:
+                      - webvtt
+                      - imsc1
+                required: [package,encryptionMethod]
+        addOns:
+          type: object
+          description: addon for optional features
+          properties:
+            drmAddon: 
+              type: object
+              description: channel level configuration such as resource Id used for DRM
+              properties:
+                cmaf-hls-resourceId:
+                  type: string
+                  description: resource Id for cmaf-hls packaging output with DRM
+                cmaf-dash-resourceId:
+                  type: string
+                  description: resource Id for cmaf-dash packaging output with DRM
+                hls-ts-resourceId:
+                  type: string
+                  description: resource Id for hls-ts packaging output with DRM
+                dash-resourceId:
+                  type: string
+                  description: resource Id for dash packaging output with DRM
+                llhls-resourceId:
+                  type: string
+                  description: resource Id for low latency HLS packaging output with DRM
+                dashll-resourceId:
+                  type: string
+                  description: resource Id for dash low latency packaging output with DRM
+                hss-resourceId:
+                  type: string
+                  description: resource Id for http smooth streaming packaging output with DRM
+            logoAddon:
+              type: object
+              description: object to store logo for overlay on video
+              properties:
+                imageUrl:
+                  type: string
+                  format: url
+                  description: url to download the logo png image
+                placement:
+                  type: string
+                  enum:
+                    - BOTTOM_LEFT
+                    - BOTTOM_RIGHT
+                    - TOP_RIGHT
+                    - TOP_LEFT
+                horizontalOffset:
+                  type: integer
+                  description: horizontal offset relative to placement in pixel
+                verticalOffset:
+                  type: integer
+                  description: veritcal offset relative to placement in pixel
+      required: [liveEventName,liveEventTranscodeProfile,controlState]
+    eventScheduler:
+      type: object
+      properties:
+        eventScheduleId:
+          type: string
+          format: uuid
+          example: 34fd01fc-fee6-11ed-be56-0242ac120002
+          readOnly: true
+        eventScheduleName:
+          type: string
+          description: simple name of the scheduled event
+          example: Keynote
+        state:
+          type: string
+          description: event state
+          example: Ready
+          readOnly: true
+          enum:
+            - Ready
+            - Unavailable
+        startTime:
+          type: string
+          format: datetime
+          example: "2023-04-1T12:23:00+0000"
+        endTime:
+          type: string
+          format: datetime
+          example: "2023-04-1T15:33:00+0000"        
+        liveEventId:
+          type: string
+          format: uuid
+        isArchive:
+          type: boolean
+          example: true
+          readOnly: true
+      required: [startTime,endTime,liveEventId,eventScheduleName]
+    destinationUrls:
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        cdnUrls:
+          type: object
+          description: list of CDN URL endpoints
+          properties:
+            cmafDashUrl:
+              type: string
+              format: url
+              description: CDN url for cmaf dash output
+            cmafHlsUrl:
+              type: string
+              format: url
+              description: CDN url for cmaf hls output
+            hlsTsUrl:
+              type: string
+              format: url
+              description: CDN url for hls ts output
+            dashUrl:
+              type: string
+              format: url
+              description: CDN url for dash output
+            ssUrl:
+              type: string
+              format: url
+              description: CDN url for http smooth streaming output
+            llHlsUrl:
+              type: string
+              format: url
+              description: CDN url for low latency HLS output
+            dashLlUrl:
+              type: string
+              format: url
+              description: CDN url for dash low latency output
+        originUrls:
+          type: object
+          description: list of Origin URL endpoints
+          properties:
+            cmafDashUrl:
+              type: string
+              format: url
+              description: Origin url for cmaf dash output
+            cmafHlsUrl:
+              type: string
+              format: url
+              description: Origin url for cmaf hls output
+            hlsTsUrl:
+              type: string
+              format: url
+              description: Origin url for hls ts output
+            dashUrl:
+              type: string
+              format: url
+              description: Origin url for dash output
+            ssUrl:
+              type: string
+              format: url
+              description: Origin url for http smooth streaming output
+            llHlsUrl:
+              type: string
+              format: url
+              description: Origin url for low latency HLS output
+            dashLlUrl:
+              type: string
+              format: url
+              description: Origin url for dash low latency output
+  requestBodies:
+    liveEventRequest:
+      description: liveEvent object that needs to be added
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/liveEvent'
+    eventScheduleRequest:
+      description: eventSchedule object that needs to be added
+      content:
+         application/json:
+          schema:
+            $ref: '#/components/schemas/eventScheduler'
+  securitySchemes:
+    vos360lite_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://vos360lite.vos360.video/oauth/authorize
+          scopes:
+            write:liveEvent: modify liveEvents
+            read:liveEvent: read your liveEvents
