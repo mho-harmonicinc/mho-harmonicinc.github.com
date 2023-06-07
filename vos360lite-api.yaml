@@ -413,7 +413,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/destinationUrls/liveEventDestination/{liveEventId}:
+  /liveEvents/liveEventDestination/{liveEventId}:
     get:
       summary: live Event Destination URLs
       tags:
@@ -447,7 +447,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/destinationUrls/eventScheduleDestination/{eventScheduleId}:
+  /liveEvents/eventScheduleDestination/{eventScheduleId}:
     get:
       summary: event schedule Destination URLs
       tags:
@@ -754,6 +754,8 @@ components:
         eventId:
           type: string
           format: uuid
+        name:
+          type: string
         cdnUrls:
           type: object
           description: list of CDN URL endpoints
@@ -786,6 +788,7 @@ components:
               type: string
               format: url
               description: CDN url for dash low latency output
+              readOnly: true
         originUrls:
           type: object
           description: list of Origin URL endpoints
@@ -794,30 +797,37 @@ components:
               type: string
               format: url
               description: Origin url for cmaf dash output
+              readOnly: true
             cmafHlsUrl:
               type: string
               format: url
               description: Origin url for cmaf hls output
+              readOnly: true
             hlsTsUrl:
               type: string
               format: url
               description: Origin url for hls ts output
+              readOnly: true
             dashUrl:
               type: string
               format: url
               description: Origin url for dash output
+              readOnly: true
             ssUrl:
               type: string
               format: url
               description: Origin url for http smooth streaming output
+              readOnly: true
             llHlsUrl:
               type: string
               format: url
               description: Origin url for low latency HLS output
+              readOnly: true
             dashLlUrl:
               type: string
               format: url
               description: Origin url for dash low latency output
+              readOnly: true
   requestBodies:
     liveEventRequest:
       description: liveEvent object that needs to be added
