@@ -225,7 +225,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/{liveEventId}/desintations:
+  /liveEvents/{liveEventId}/destinations:
     get:
       summary: live Event Destination URLs
       tags:
