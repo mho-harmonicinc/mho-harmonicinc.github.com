@@ -6,7 +6,6 @@ info:
 
     - liveEvents
     - liveEventSchedules
-    - destinationUrls
     - file
     - drm
     - endpoint
@@ -26,7 +25,6 @@ servers:
 tags:
   - name: liveEvents
   - name: liveEventSchedules
-  - name: destinationUrls
   - name: file
   - name: presets
 paths:
@@ -443,7 +441,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/{eventScheduleId}/destinations:
+  /liveEvents/eventSchedules/{eventScheduleId}/destinations:
     get:
       summary: event schedule Destination URLs
       tags:
