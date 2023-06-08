@@ -7,7 +7,7 @@ info:
     - liveEvents
     - liveEventSchedules
     - liveEventNotifications
-    - originEndpoint
+    - origin-engine
     
   termsOfService: https://www.vos360medialite.video/terms/
   contact:
@@ -25,12 +25,12 @@ tags:
   - name: liveEvents
   - name: liveEventSchedules
   - name: liveEventNotifications
-  - name: originEndpoint
+  - name: origin-engine
 
 paths:
-  /liveEvents:
+  /liveEvents/v1/events:
     get:
-      summary: list all the liveEvents
+      summary: List all the liveEvents
       tags:
         - liveEvents
       description: list all the liveEvents
@@ -98,7 +98,11 @@ paths:
         '401':
           description: Unauthorized
         '403':
-          description: Forbidden      
+          description: Forbidden
+      security:
+      - vos360lite_auth:
+          - write:liveEvent
+          - read:liveEvent
     post:
       summary: Create a liveEvent
       tags:
@@ -118,14 +122,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/liveEvent'
+                allOf:
+                  - $ref: '#/components/schemas/liveEvent'
+                  - $ref: '#/components/schemas/DestinationUrls'    
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
         '405':
           description: Invalid input
-  /liveEvents/{liveEventId}:
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/v1/events/{liveEventId}:
     get:
       summary: Find liveEvent by ID
       tags:
@@ -225,9 +235,9 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/{liveEventId}/destinations:
+  /liveEvents/v1/events/{liveEventId}/destinations:
     get:
-      summary: live Event Destination URLs
+      summary: Live Event Destination URLs
       tags:
         - liveEvents
       description: Returns a URL endpoints of a liveEvent
@@ -246,7 +256,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/destinationUrls'          
+                $ref: '#/components/schemas/DestinationUrls'          
         '400':
           description: Invalid ID supplied
         '401':
@@ -255,9 +265,13 @@ paths:
           description: Forbidden   
         '404':
           description: live Event not found
-  /liveEvents/eventSchedules:
+      security:
+      - vos360lite_auth:
+          - write:liveEvent
+          - read:liveEvent
+  /liveEvents/v1/eventSchedules:
     get:
-      summary: list of all recorded events
+      summary: List of all recorded events
       tags:
         - liveEventSchedules
       description: list all recorded events
@@ -314,7 +328,11 @@ paths:
         '401':
           description: Unauthorized
         '403':
-          description: Forbidden 
+          description: Forbidden
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
     post:
       summary: Create a event schedule
       tags:
@@ -334,14 +352,20 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/eventScheduler'
+                allOf:
+                  - $ref: '#/components/schemas/eventScheduler'
+                  - $ref: '#/components/schemas/DestinationUrls'
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
         '405':
           description: Invalid input
-  /liveEvents/eventSchedules/{eventScheduleId}:
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/v1/eventSchedules/{eventScheduleId}:
     get:
       summary: Find event schedule by ID
       tags:
@@ -441,9 +465,9 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/eventSchedules/{eventScheduleId}/destinations:
+  /liveEvents/v1/eventSchedules/{eventScheduleId}/destinations:
     get:
-      summary: event schedule Destination URLs
+      summary: Event schedule Destination URLs
       tags:
         - liveEventSchedules
       description: Returns a URL endpoints of a eventSchedule
@@ -462,7 +486,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/destinationUrls'          
+                $ref: '#/components/schemas/DestinationUrls'          
         '400':
           description: Invalid ID supplied
         '401':
@@ -475,9 +499,9 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/notifications:
+  /liveEvents/v1/notifications:
     get:
-      summary: notifications for live event
+      summary: Notifications for live event
       tags:
         - liveEventNotifications
       description: returns the notifications configuration
@@ -538,9 +562,9 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/notifications/history:
+  /liveEvents/v1/notifications/history:
     get:
-      summary: notifications for live event
+      summary: Notifications for live event
       tags:
         - liveEventNotifications
       description: returns the notifications history
@@ -555,14 +579,47 @@ paths:
         '401':
           description: Unauthorized
         '403':
-          description: Forbidden  
-  /originEndpoint:
+          description: Forbidden
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+  /liveEvents/v1/settings:
     get:
-      summary: get origin Endpoint config
+      summary: Get liveEvents settings
       tags:
-        - originEndpoint
-      description: returns the origin endpoint configuration
-      operationId: getOriginEndpointConfig
+        - liveEvents
+      description: returns the liveEvents settings
+      operationId: getLiveEventSettings
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                description: liveEvents app settings
+                properties:
+                  concurrentLiveEventSoftLimit:
+                    type: integer
+                    example: 100
+                    readOnly: true
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
+                 
+  /origin-engine/v1/settings:
+    get:
+      summary: Get origin endpoint related to capacity reservation
+      tags:
+        - origin-engine
+      description: returns the origin capacity reservation
+      operationId: getOriginEngineCapacityReservation
       responses:
         '200':
           description: successful operation
@@ -579,9 +636,9 @@ paths:
           - write:liveEvent
           - read:liveEvent
     put:
-      summary: Updates the origin endpoint configuration
+      summary: Updates the origin endpoint related to capacity reservation
       tags:
-        - originEndpoint
+        - origin-engine
       description: Updates the origin endpoint config
       operationId: updateOriginEndpoint
       requestBody:
@@ -871,86 +928,85 @@ components:
           example: true
           readOnly: true
       required: [startTime,endTime,liveEventId,eventScheduleName]
-    destinationUrls:
+    DestinationUrls:
       type: object
       properties:
-        eventId:
-          type: string
-          format: uuid
-        name:
-          type: string
-        cdnUrls:
+        destinationUrls:
           type: object
-          description: list of CDN URL endpoints
+          description: list of URLs
           properties:
-            cmafDashUrl:
-              type: string
-              format: url
-              description: CDN url for cmaf dash output
-            cmafHlsUrl:
-              type: string
-              format: url
-              description: CDN url for cmaf hls output
-            hlsTsUrl:
-              type: string
-              format: url
-              description: CDN url for hls ts output
-            dashUrl:
-              type: string
-              format: url
-              description: CDN url for dash output
-            ssUrl:
-              type: string
-              format: url
-              description: CDN url for http smooth streaming output
-            llHlsUrl:
-              type: string
-              format: url
-              description: CDN url for low latency HLS output
-            dashLlUrl:
-              type: string
-              format: url
-              description: CDN url for dash low latency output
-              readOnly: true
-        originUrls:
-          type: object
-          description: list of Origin URL endpoints
-          properties:
-            cmafDashUrl:
-              type: string
-              format: url
-              description: Origin url for cmaf dash output
-              readOnly: true
-            cmafHlsUrl:
-              type: string
-              format: url
-              description: Origin url for cmaf hls output
-              readOnly: true
-            hlsTsUrl:
-              type: string
-              format: url
-              description: Origin url for hls ts output
-              readOnly: true
-            dashUrl:
-              type: string
-              format: url
-              description: Origin url for dash output
-              readOnly: true
-            ssUrl:
-              type: string
-              format: url
-              description: Origin url for http smooth streaming output
-              readOnly: true
-            llHlsUrl:
-              type: string
-              format: url
-              description: Origin url for low latency HLS output
-              readOnly: true
-            dashLlUrl:
-              type: string
-              format: url
-              description: Origin url for dash low latency output
-              readOnly: true
+            cdnUrls:
+              type: object
+              description: list of CDN URL endpoints
+              properties:
+                cmafDashUrl:
+                  type: string
+                  format: url
+                  description: CDN url for cmaf dash output
+                cmafHlsUrl:
+                  type: string
+                  format: url
+                  description: CDN url for cmaf hls output
+                hlsTsUrl:
+                  type: string
+                  format: url
+                  description: CDN url for hls ts output
+                dashUrl:
+                  type: string
+                  format: url
+                  description: CDN url for dash output
+                ssUrl:
+                  type: string
+                  format: url
+                  description: CDN url for http smooth streaming output
+                llHlsUrl:
+                  type: string
+                  format: url
+                  description: CDN url for low latency HLS output
+                dashLlUrl:
+                  type: string
+                  format: url
+                  description: CDN url for dash low latency output
+                  readOnly: true
+            originUrls:
+              type: object
+              description: list of Origin URL endpoints
+              properties:
+                cmafDashUrl:
+                  type: string
+                  format: url
+                  description: Origin url for cmaf dash output
+                  readOnly: true
+                cmafHlsUrl:
+                  type: string
+                  format: url
+                  description: Origin url for cmaf hls output
+                  readOnly: true
+                hlsTsUrl:
+                  type: string
+                  format: url
+                  description: Origin url for hls ts output
+                  readOnly: true
+                dashUrl:
+                  type: string
+                  format: url
+                  description: Origin url for dash output
+                  readOnly: true
+                ssUrl:
+                  type: string
+                  format: url
+                  description: Origin url for http smooth streaming output
+                  readOnly: true
+                llHlsUrl:
+                  type: string
+                  format: url
+                  description: Origin url for low latency HLS output
+                  readOnly: true
+                dashLlUrl:
+                  type: string
+                  format: url
+                  description: Origin url for dash low latency output
+                  readOnly: true
     notificationHistory:
       type: object
       properties:
