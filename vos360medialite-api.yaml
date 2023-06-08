@@ -499,70 +499,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/v1/notifications:
-    get:
-      summary: Notifications for live event
-      tags:
-        - liveEventNotifications
-      description: returns the notifications configuration
-      operationId: getLiveEventNotificationsConfig
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  webhookNotificationsUrl:
-                    type: string
-                    format: url
-                    example: http://myStreamingService.collegeSport.video/notifications
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-      security:
-      - vos360lite_auth:
-          - write:liveEvent
-          - read:liveEvent
-    post:
-      summary: Config the notification webhook url
-      tags:
-        - liveEventNotifications
-      description: webhook URL to post notification
-      operationId: configLiveEventNotificationsWebhookUrl
-      requestBody:
-        description: configure the webhook url
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                liveEventNotificationsWebhookUrl:
-                  type: string
-                  format: url
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  webhookNotificationsUrl:
-                    type: string
-                    format: url
-                    example: http://myStreamingService.collegeSport.video/notifications
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden          
-      security:
-        - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/notifications/history:
+  /liveEvents/v1/notificationsHistory:
     get:
       summary: Notifications for live event
       tags:
@@ -604,6 +541,9 @@ paths:
                     type: integer
                     example: 100
                     readOnly: true
+                  liveEventNotificationsWebhookUrl:
+                    type: string
+                    format: url
         '401':
           description: Unauthorized
         '403':
@@ -612,7 +552,35 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-                 
+    put:
+      summary: Update liveEvents settings
+      tags:
+        - liveEvents
+      description: returns the liveEvents settings
+      operationId: updateLiveEventSettings
+      requestBody:
+        description: Update LiveEvent settings
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LiveEventsSettings'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LiveEventsSettings'          
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:liveEvent
+            - read:liveEvent
   /origin-engine/v1/settings:
     get:
       summary: Get origin endpoint related to capacity reservation
@@ -1038,6 +1006,17 @@ components:
                 type: string
                 format: date-time
                 readOnly: true
+    LiveEventsSettings:
+      type: object
+      description: liveEvents app settings
+      properties:
+        concurrentLiveEventSoftLimit:
+          type: integer
+          example: 100
+          readOnly: true
+        liveEventNotificationsWebhookUrl:
+          type: string
+          format: url
     originEndpoint:
       type: object
       properties:
