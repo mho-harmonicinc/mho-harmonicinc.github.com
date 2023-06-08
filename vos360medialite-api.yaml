@@ -20,7 +20,7 @@ externalDocs:
   description: vos360 media lite Documentation
   url: https://www.vos360medialite.video/doc
 servers: 
-  - url: https://www.vos360medialite.video/api/v1
+  - url: https://www.vos360medialite.video/api
 tags:
   - name: liveEvents
   - name: liveEventSchedules
@@ -297,6 +297,7 @@ paths:
             type: string
             enum:
             - Ready
+            - Recording
             - Unavailable
       responses:
         '200':
@@ -506,6 +507,22 @@ paths:
         - liveEventNotifications
       description: returns the notifications history
       operationId: getLiveEventNotificationsHistory
+      parameters:
+        - in: query
+          name: liveEventId
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: startTime
+          schema:
+            type: string 
+            format: date-time
+        - in: query
+          name: endTime
+          schema:
+            type: string 
+            format: date-time
       responses:
         '200':
           description: successful operation
@@ -657,7 +674,7 @@ components:
           readOnly: true
           enum:
             - Off
-            - Deploy
+            - Allocating
             - Error
             - On
         ingest:
