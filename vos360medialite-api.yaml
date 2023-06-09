@@ -117,8 +117,8 @@ paths:
               $ref: '#/components/schemas/liveEvent'
         required: true
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Live Event Created
           content:
             application/json:
               schema:
@@ -348,8 +348,8 @@ paths:
               $ref: '#/components/schemas/eventScheduler'
         required: true
       responses:
-        '200':
-          description: Successful operation
+        '201':
+          description: Event Schedule Created
           content:
             application/json:
               schema:
@@ -876,7 +876,6 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
-      required: [liveEventName,liveEventTranscodeProfile,controlState]
     eventScheduler:
       type: object
       properties:
