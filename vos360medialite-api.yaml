@@ -5,7 +5,6 @@ info:
     This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
 
     - liveEvents
-    - liveEventSchedules
     - liveEventNotifications
     - origin-engine
     
@@ -23,26 +22,25 @@ servers:
   - url: https://www.vos360medialite.video/api
 tags:
   - name: liveEvents
-  - name: liveEventSchedules
   - name: liveEventNotifications
   - name: origin-engine
 
 paths:
-  /liveEvents/v1/events:
+  /liveEvents/v1/channels:
     get:
-      summary: List all the liveEvents
+      summary: List all the liveEvent Channels
       tags:
         - liveEvents
-      description: list all the liveEvents
+      description: list all the liveEvent Channels
       operationId: listLiveEvents
       parameters:
         - in: query
-          name: liveEventId
+          name: liveEventChannelId
           schema:
             type: string
             format: uuid
         - in: query
-          name: liveEventName
+          name: liveEventChannelName
           schema:
             type: string
         - in: query
@@ -58,10 +56,10 @@ paths:
           schema:
             type: string
             enum:
-            - Off
-            - Deploy
+            - Stopped
+            - Allocating
             - Error
-            - On
+            - Running
       responses:
         '200':
           description: Successful operation
@@ -69,7 +67,7 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of live events with status
+                description: list of Channels with status
                 readOnly: true
                 items:
                   type: object
@@ -91,9 +89,9 @@ paths:
                       type: string
                       example: On
                       enum:
-                      - Deploy
-                      - On
-                      - Off
+                      - Stopped
+                      - Allocating
+                      - Running
                       - Error
         '401':
           description: Unauthorized
@@ -107,10 +105,10 @@ paths:
       summary: Create a liveEvent
       tags:
         - liveEvents
-      description: create a liveEvent
-      operationId: createLiveEvent
+      description: create a liveEvent Channel
+      operationId: createLiveEventChannel
       requestBody:
-        description: Create a new liveEvent
+        description: Create a new liveEvent Channel
         content:
           application/json:
             schema:
@@ -118,7 +116,7 @@ paths:
         required: true
       responses:
         '201':
-          description: Live Event Created
+          description: LiveEvent Channel Created
           content:
             application/json:
               schema:
@@ -135,17 +133,17 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/v1/events/{liveEventId}:
+  /liveEvents/v1/channels/{liveEventChannelId}:
     get:
-      summary: Find liveEvent by ID
+      summary: Find liveEvent Channel by ID
       tags:
         - liveEvents 
       description: Returns a single liveEvent
-      operationId: getLiveEventById
+      operationId: getLiveEventChannelById
       parameters:
-        - name: liveEventId
+        - name: liveEventChannelId
           in: path
-          description: ID of liveEvent to return
+          description: ID of liveEvent Channel to return
           required: true
           schema:
             type: string
@@ -164,19 +162,19 @@ paths:
         '403':
           description: Forbidden   
         '404':
-          description: liveEvent not found
+          description: liveEvent Channel not found
       security:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
     put:
-      summary: Updates a liveEvent
+      summary: Updates a liveEvent Channel
       tags:
         - liveEvents
-      description: Updates a single liveEvent
-      operationId: updateLiveEventById
+      description: Updates a single liveEvent Channel
+      operationId: updateLiveEventChannelById
       parameters:
-        - name: liveEventId
+        - name: liveEventChannelId
           in: path
           description: ID of liveEvent to return
           required: true
@@ -184,7 +182,7 @@ paths:
             type: string
             format: uuid
       requestBody:
-        description: Create a new liveEvent
+        description: Create a new liveEvent Channel
         content:
           application/json:
             schema:
@@ -207,13 +205,13 @@ paths:
             - write:liveEvent
             - read:liveEvent
     delete:
-      summary: Deletes a liveEvent
+      summary: Deletes a liveEvent Channel
       tags:
         - liveEvents
-      description: delete a liveEvent
-      operationId: deleteLiveEvent
+      description: delete a liveEvent Channel
+      operationId: deleteLiveEventChannel
       parameters:
-        - name: liveEventId
+        - name: liveEventChannelId
           in: path
           description: ID of liveEvent to return
           required: true
@@ -235,17 +233,17 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/v1/events/{liveEventId}/destinations:
+  /liveEvents/v1/channels/{liveEventChannelId}/playback:
     get:
-      summary: Live Event Destination URLs
+      summary: Live Event Playback URLs
       tags:
         - liveEvents
-      description: Returns a URL endpoints of a liveEvent
-      operationId: getLiveEventDestinationUrlById
+      description: Returns a URL endpoints of a liveEvent Channel
+      operationId: getLiveEventChannelPlaybackUrlById
       parameters:
-        - name: liveEventId
+        - name: liveEventChannelId
           in: path
-          description: ID of liveEvent to return
+          description: ID of liveEvent Channel to return
           required: true
           schema:
             type: string
@@ -256,7 +254,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DestinationUrls'          
+                allOf:
+                - $ref: '#/components/schemas/Channel'  
+                - $ref: '#/components/schemas/DestinationUrls'          
         '400':
           description: Invalid ID supplied
         '401':
@@ -269,25 +269,25 @@ paths:
       - vos360lite_auth:
           - write:liveEvent
           - read:liveEvent
-  /liveEvents/v1/eventSchedules:
+  /liveEvents/v1/events:
     get:
-      summary: List of all recorded events
+      summary: List of all events
       tags:
-        - liveEventSchedules
-      description: list all recorded events
-      operationId: listEventSchedules
+        - liveEvents
+      description: list all events
+      operationId: listEvents
       parameters:
         - in: query
-          name: liveEventId
+          name: liveEventChannelId
           schema:
             type: string
             format: uuid
         - in: query
-          name: eventScheduleName
+          name: liveEventName
           schema:
             type: string
         - in: query
-          name: eventScheduleId
+          name: liveEventId
           schema:
             type: string
             format: uuid
@@ -306,7 +306,7 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of recordings with status
+                description: list of events with status
                 readOnly: true
                 items:
                   type: object
@@ -335,13 +335,13 @@ paths:
             - write:liveEvent
             - read:liveEvent
     post:
-      summary: Create a event schedule
+      summary: Create an event
       tags:
-        - liveEventSchedules
-      description: create a event schedule
-      operationId: createEventSchedule
+        - liveEvents
+      description: create an event
+      operationId: createEvent
       requestBody:
-        description: Create a new event schedule
+        description: Create a new event 
         content:
           application/json:
             schema:
@@ -349,7 +349,7 @@ paths:
         required: true
       responses:
         '201':
-          description: Event Schedule Created
+          description: Event Created
           content:
             application/json:
               schema:
@@ -366,15 +366,15 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/v1/eventSchedules/{eventScheduleId}:
+  /liveEvents/v1/events/{eventId}:
     get:
       summary: Find event schedule by ID
       tags:
-        - liveEventSchedules
+        - liveEvents
       description: Returns a single event schedule
       operationId: getEventScheduleById
       parameters:
-        - name: eventScheduleId
+        - name: eventId
           in: path
           description: ID of event schedule to return
           required: true
@@ -401,13 +401,13 @@ paths:
             - write:liveEvent
             - read:liveEvent
     put:
-      summary: Updates a event schedule
+      summary: Updates an event
       tags:
-        - liveEventSchedules
-      description: Updates a single event schedule
-      operationId: updateEventScheduleById
+        - liveEvents
+      description: Updates a single event
+      operationId: updateEventById
       parameters:
-        - name: eventScheduleId
+        - name: eventId
           in: path
           description: ID of eventSchedule to return
           required: true
@@ -440,11 +440,11 @@ paths:
     delete:
       summary: Deletes a eventSchedule
       tags:
-        - liveEventSchedules
-      description: delete a eventSchedule
-      operationId: deleteEventSchedule
+        - liveEvents
+      description: delete an event
+      operationId: deleteEvent
       parameters:
-        - name: eventScheduleId
+        - name: eventId
           in: path
           description: ID of eventSchedule to return
           required: true
@@ -466,15 +466,15 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /liveEvents/v1/eventSchedules/{eventScheduleId}/destinations:
+  /liveEvents/v1/events/{eventId}/playback:
     get:
-      summary: Event schedule Destination URLs
+      summary: Event Playback URLs
       tags:
-        - liveEventSchedules
-      description: Returns a URL endpoints of a eventSchedule
-      operationId: getEventScheduleDestinationUrlById
+        - liveEvents
+      description: Returns a URL endpoints of an event
+      operationId: getEventPlaybackUrlById
       parameters:
-        - name: eventScheduleId
+        - name: eventId
           in: path
           description: ID of Event Schedule to return
           required: true
@@ -487,7 +487,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/DestinationUrls'          
+                allOf:
+                - $ref: '#/components/schemas/Event' 
+                - $ref: '#/components/schemas/DestinationUrls'          
         '400':
           description: Invalid ID supplied
         '401':
@@ -598,7 +600,7 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /origin-engine/v1/settings:
+  /origin-engine/v1/capacity:
     get:
       summary: Get origin endpoint related to capacity reservation
       tags:
@@ -650,12 +652,12 @@ components:
     liveEvent:
       type: object
       properties:
-        liveEventId:
+        liveEventChannelId:
           type: string
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        liveEventName:
+        liveEventChannelName:
           type: string
           description: simple name of the liveEvent
           example: College Football 
@@ -681,7 +683,7 @@ components:
           type: object
           description: liveEvent ingest object
           properties:
-            preview:
+            inputMonitor:
               type: object
               readOnly: true
               properties:
@@ -746,11 +748,11 @@ components:
                       description: URL for backup input
                       readOnly: true
               required: [protocol]
-        liveEventTranscode:
+        liveEventChannelTranscode:
           type: object
           description: object to store the transcoding profile configuration
           properties:
-            liveEventTranscodeProfile:
+            liveEventChannelTranscodeProfile:
               type: string
               description: the encoding profile for this liveEvent
               example: Standard
@@ -912,10 +914,27 @@ components:
           example: true
           readOnly: true
       required: [startTime,endTime,liveEventId,eventScheduleName]
+    Channel:
+      Channel:  
+      type: object
+      properties:
+        liveEventChannelId:
+          type: string
+          format: uuid
+        liveEventChannelName:
+          type: string
+    Event:  
+      type: object
+      properties:
+        eventId:
+          type: string
+          format: uuid
+        eventName:
+          type: string
     DestinationUrls:
       type: object
       properties:
-        destinationUrls:
+        playbackUrls:
           type: object
           description: list of URLs
           properties:
