@@ -72,10 +72,10 @@ paths:
                 items:
                   type: object
                   properties:
-                    liveEventId: 
+                    liveEventChannelId: 
                       type: string
                       format: uuid
-                    liveEventName:
+                    liveEventChannelName:
                       type: string
                       example: Company Town Hall
                     controlState:
@@ -191,7 +191,7 @@ paths:
         '200':
           description: successful operation
         '400':
-          description: Invalid liveEventId value
+          description: Invalid Id value
         '401':
           description: Unauthorized
         '403':
@@ -222,13 +222,13 @@ paths:
         '200':
           description: successful operation
         '400':
-          description: Invalid liveEventId value
+          description: Invalid Id value
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
         '404':
-          description: liveEvent not found
+          description: liveEventChannel not found
       security:
         - vos360lite_auth:
             - write:liveEvent
@@ -283,11 +283,11 @@ paths:
             type: string
             format: uuid
         - in: query
-          name: liveEventName
+          name: eventName
           schema:
             type: string
         - in: query
-          name: liveEventId
+          name: eventId
           schema:
             type: string
             format: uuid
@@ -311,13 +311,13 @@ paths:
                 items:
                   type: object
                   properties:
-                    eventScheduleId: 
+                    eventId: 
                       type: string
                       format: uuid
-                    eventScheduleName:
+                    eventName:
                       type: string
                       example: Keynote
-                    liveEventId:
+                    liveEventChannelId:
                       type: string
                       format: uuid
                     state:
@@ -511,7 +511,7 @@ paths:
       operationId: getLiveEventNotificationsHistory
       parameters:
         - in: query
-          name: liveEventId
+          name: liveEventChannelId
           schema:
             type: string
             format: uuid
@@ -600,13 +600,13 @@ paths:
         - vos360lite_auth:
             - write:liveEvent
             - read:liveEvent
-  /origin-engine/v1/capacity:
+  /origin-engine/v1/streamingEndpoint:
     get:
-      summary: Get origin endpoint related to capacity reservation
+      summary: Get origin streaming endpoint related to streaming units reserved
       tags:
         - origin-engine
-      description: returns the origin capacity reservation
-      operationId: getOriginEngineCapacityReservation
+      description: returns the streaming capacity reservation
+      operationId: getStreamingEndpointReservedUnits
       responses:
         '200':
           description: successful operation
@@ -881,12 +881,12 @@ components:
     eventScheduler:
       type: object
       properties:
-        eventScheduleId:
+        eventId:
           type: string
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        eventScheduleName:
+        eventName:
           type: string
           description: simple name of the scheduled event
           example: Keynote
@@ -906,16 +906,15 @@ components:
           type: string
           format: datetime
           example: "2023-04-1T15:33:00+0000"        
-        liveEventId:
+        liveEventChannelId:
           type: string
           format: uuid
         isArchive:
           type: boolean
           example: true
           readOnly: true
-      required: [startTime,endTime,liveEventId,eventScheduleName]
+      required: [startTime,endTime,liveEventChannelId,eventName]
     Channel:
-      Channel:  
       type: object
       properties:
         liveEventChannelId:
@@ -1024,11 +1023,11 @@ components:
                 type: string
                 format: uuid
                 readOnly: true
-              liveEventId:
+              liveEventChannelId:
                 type: string
                 format: uuid
                 readOnly: true
-              liveEventName:
+              liveEventChannelName:
                 type: string
                 readOnly: true
                 example: college football match 1
@@ -1055,12 +1054,12 @@ components:
     originEndpoint:
       type: object
       properties:
-        capacityReservation:
+        streamingUnits:
           type: object
           properties:
             count:
               type: integer
-              description: the number of origin endpoints configured
+              description: the number of streaming units configured
               example: 2
               minimum: 0
               maximum: 100
