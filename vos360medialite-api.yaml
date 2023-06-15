@@ -4,8 +4,8 @@ info:
   description: |-
     This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
 
-    - liveEvents
-    - liveEventNotifications
+    - LiveEvents
+    - Notification
     - origin-engine
     
   termsOfService: https://www.vos360medialite.video/terms/
@@ -22,25 +22,25 @@ servers:
   - url: https://www.vos360medialite.video/api
 tags:
   - name: liveEvents
-  - name: liveEventNotifications
+  - name: notification
   - name: origin-engine
 
 paths:
-  /liveEvents/v1/channels:
+  /live/v1/channels:
     get:
-      summary: List all the liveEvent Channels
+      summary: List all the live Channels
       tags:
         - liveEvents
-      description: list all the liveEvent Channels
-      operationId: listLiveEvents
+      description: list all the live Channels
+      operationId: listLiveChannels
       parameters:
         - in: query
-          name: liveEventChannelId
+          name: id
           schema:
             type: string
             format: uuid
         - in: query
-          name: liveEventChannelName
+          name: name
           schema:
             type: string
         - in: query
@@ -48,9 +48,8 @@ paths:
           schema:
             type: string
             enum:
-            - Activated
-            - Test
-            - Off
+            - Online
+            - Offline
         - in: query
           name: operationState
           schema:
@@ -72,19 +71,18 @@ paths:
                 items:
                   type: object
                   properties:
-                    liveEventChannelId: 
+                    id: 
                       type: string
                       format: uuid
-                    liveEventChannelName:
+                    name:
                       type: string
                       example: Company Town Hall
                     controlState:
                       type: string
                       example: Activated
                       enum:
-                      - Activated
-                      - Test
-                      - Off
+                      - Online
+                      - Offline
                     operationState:
                       type: string
                       example: On
@@ -99,16 +97,16 @@ paths:
           description: Forbidden
       security:
       - vos360lite_auth:
-          - write:liveEvent
-          - read:liveEvent
+          - write:live
+          - read:live
     post:
-      summary: Create a liveEvent Channel
+      summary: Create a live Channel
       tags:
         - liveEvents
-      description: create a liveEvent Channel
-      operationId: createLiveEventChannel
+      description: create a live Channel
+      operationId: createLiveChannel
       requestBody:
-        description: Create a new liveEvent Channel
+        description: Create a new live Channel
         content:
           application/json:
             schema:
@@ -116,7 +114,7 @@ paths:
         required: true
       responses:
         '201':
-          description: LiveEvent Channel Created
+          description: Live Channel Created
           content:
             application/json:
               schema:
@@ -131,19 +129,19 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/channels/{liveEventChannelId}:
+            - write:live
+            - read:live
+  /live/v1/channels/{id}:
     get:
-      summary: Find liveEvent Channel by ID
+      summary: Find live Channel by ID
       tags:
-        - liveEvents 
-      description: Returns a single liveEvent
-      operationId: getLiveEventChannelById
+        - liveEvents
+      description: Returns a single live Channel
+      operationId: getLiveChannelById
       parameters:
-        - name: liveEventChannelId
+        - name: id
           in: path
-          description: ID of liveEvent Channel to return
+          description: ID of live Channel to return
           required: true
           schema:
             type: string
@@ -162,27 +160,27 @@ paths:
         '403':
           description: Forbidden   
         '404':
-          description: liveEvent Channel not found
+          description: live Channel not found
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     put:
-      summary: Updates a liveEvent Channel
+      summary: Updates a live Channel
       tags:
         - liveEvents
-      description: Updates a single liveEvent Channel
-      operationId: updateLiveEventChannelById
+      description: Updates a single live Channel
+      operationId: updateLiveChannelById
       parameters:
-        - name: liveEventChannelId
+        - name: id
           in: path
-          description: ID of liveEvent to return
+          description: ID of live Chaneel to return
           required: true
           schema:
             type: string
             format: uuid
       requestBody:
-        description: Create a new liveEvent Channel
+        description: Create a new live Channel
         content:
           application/json:
             schema:
@@ -197,23 +195,23 @@ paths:
         '403':
           description: Forbidden   
         '404':
-          description: liveEvent not found
+          description: live Channel not found
         '405':
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     delete:
-      summary: Deletes a liveEvent Channel
+      summary: Deletes a live Channel
       tags:
         - liveEvents
-      description: delete a liveEvent Channel
-      operationId: deleteLiveEventChannel
+      description: delete a live Channel
+      operationId: deleteLiveChannel
       parameters:
-        - name: liveEventChannelId
+        - name: id
           in: path
-          description: ID of liveEvent to return
+          description: ID of live to return
           required: true
           schema:
             type: string
@@ -231,19 +229,19 @@ paths:
           description: liveEventChannel not found
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/channels/{liveEventChannelId}/playback:
+            - write:live
+            - read:live
+  /live/v1/channels/{id}/playback:
     get:
-      summary: Live Event Playback URLs
+      summary: Live Channel Playback URLs
       tags:
         - liveEvents
-      description: Returns a URL endpoints of a liveEvent Channel
-      operationId: getLiveEventChannelPlaybackUrlById
+      description: Returns a URL endpoints of a liveChannel
+      operationId: getLiveChannelPlaybackUrlById
       parameters:
-        - name: liveEventChannelId
+        - name: id
           in: path
-          description: ID of liveEvent Channel to return
+          description: ID of live Channel to return
           required: true
           schema:
             type: string
@@ -267,9 +265,9 @@ paths:
           description: live Event not found
       security:
       - vos360lite_auth:
-          - write:liveEvent
-          - read:liveEvent
-  /liveEvents/v1/events:
+          - write:live
+          - read:live
+  /live/v1/events:
     get:
       summary: List of all events
       tags:
@@ -278,16 +276,11 @@ paths:
       operationId: listEvents
       parameters:
         - in: query
-          name: liveEventChannelId
-          schema:
-            type: string
-            format: uuid
-        - in: query
-          name: eventName
+          name: name
           schema:
             type: string
         - in: query
-          name: eventId
+          name: id
           schema:
             type: string
             format: uuid
@@ -296,9 +289,11 @@ paths:
           schema:
             type: string
             enum:
-            - Ready
-            - Recording
-            - Unavailable
+            - Offline
+            - Allocating
+            - Prepare
+            - Live
+            - Finished
       responses:
         '200':
           description: Successful operation
@@ -311,29 +306,29 @@ paths:
                 items:
                   type: object
                   properties:
-                    eventId: 
+                    id: 
                       type: string
                       format: uuid
-                    eventName:
+                    name:
                       type: string
                       example: Keynote
-                    liveEventChannelId:
-                      type: string
-                      format: uuid
                     state:
                       type: string
                       example: On
                       enum:
-                      - Ready
-                      - Unavailable
+                      - Offline
+                      - Allocating
+                      - Prepare
+                      - Live
+                      - Finished
         '401':
           description: Unauthorized
         '403':
           description: Forbidden
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     post:
       summary: Create an event
       tags:
@@ -364,9 +359,9 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/events/{eventId}:
+            - write:live
+            - read:live
+  /live/v1/events/{id}:
     get:
       summary: Find event by ID
       tags:
@@ -374,7 +369,7 @@ paths:
       description: Returns a single event
       operationId: getEventById
       parameters:
-        - name: eventId
+        - name: id
           in: path
           description: ID of event to return
           required: true
@@ -398,8 +393,8 @@ paths:
           description: Event not found
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     put:
       summary: Updates an event
       tags:
@@ -407,7 +402,7 @@ paths:
       description: Updates a single event
       operationId: updateEventById
       parameters:
-        - name: eventId
+        - name: id
           in: path
           description: ID of event to return
           required: true
@@ -435,8 +430,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     delete:
       summary: Deletes an event
       tags:
@@ -444,7 +439,7 @@ paths:
       description: delete an event
       operationId: deleteEvent
       parameters:
-        - name: eventId
+        - name: id
           in: path
           description: ID of event to return
           required: true
@@ -464,9 +459,9 @@ paths:
           description: event not found
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/events/{eventId}/playback:
+            - write:live
+            - read:live
+  /live/v1/events/{id}/playback:
     get:
       summary: Event Playback URLs
       tags:
@@ -474,7 +469,7 @@ paths:
       description: Returns a URL endpoints of an event
       operationId: getEventPlaybackUrlById
       parameters:
-        - name: eventId
+        - name: id
           in: path
           description: ID of Event to return
           required: true
@@ -500,53 +495,66 @@ paths:
           description: event not found
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/notificationsHistory:
+            - write:live
+            - read:live
+  /notification/v1/settings:
     get:
-      summary: Notifications for live event
+      summary: Notification webhook setting
       tags:
-        - liveEventNotifications
-      description: returns the notifications history
-      operationId: getLiveEventNotificationsHistory
-      parameters:
-        - in: query
-          name: liveEventChannelId
-          schema:
-            type: string
-            format: uuid
-        - in: query
-          name: startTime
-          schema:
-            type: string 
-            format: date-time
-        - in: query
-          name: endTime
-          schema:
-            type: string 
-            format: date-time
+        - notification
+      description: returns the notification settings
+      operationId: getNotificationSetting
       responses:
         '200':
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/notificationHistory'
+                $ref: '#/components/schemas/NotificationSettings'
         '401':
           description: Unauthorized
         '403':
           description: Forbidden
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
-  /liveEvents/v1/settings:
+            - write:live
+            - read:live
+    put:
+      summary: Update notification settings
+      tags:
+        - notification
+      description: returns the notification settings
+      operationId: updateNotificationSettings
+      requestBody:
+        description: Update notification settings
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSettings'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSettings'          
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live
+  /live/v1/settings:
     get:
-      summary: Get liveEvents settings
+      summary: Get live event app settings
       tags:
         - liveEvents
-      description: returns the liveEvents settings
-      operationId: getLiveEventSettings
+      description: returns the live settings
+      operationId: getLiveSettings
       responses:
         '200':
           description: successful operation
@@ -560,17 +568,14 @@ paths:
                     type: integer
                     example: 100
                     readOnly: true
-                  liveEventNotificationsWebhookUrl:
-                    type: string
-                    format: url
         '401':
           description: Unauthorized
         '403':
           description: Forbidden
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
     put:
       summary: Update liveEvents settings
       tags:
@@ -598,8 +603,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:liveEvent
-            - read:liveEvent
+            - write:live
+            - read:live
   /origin-engine/v1/streamingEndpoint:
     get:
       summary: Get origin streaming endpoint related to streaming units reserved
@@ -620,8 +625,8 @@ paths:
           description: Forbidden
       security:
       - vos360lite_auth:
-          - write:liveEvent
-          - read:liveEvent
+          - write:live
+          - read:live
     put:
       summary: Updates the origin endpoint related to capacity reservation
       tags:
@@ -652,33 +657,32 @@ components:
     liveEvent:
       type: object
       properties:
-        liveEventChannelId:
+        id:
           type: string
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        liveEventChannelName:
+        name:
           type: string
           description: simple name of the liveEvent
           example: College Football 
         controlState:
           type: string
           description: liveEvent Control State
-          example: Activated
+          example: Online
           enum:
-            - Activated
-            - Test
-            - Off
+            - Online
+            - Offline
         operationState:
           type: string
           description: liveEvent Operation State
           example: On
           readOnly: true
           enum:
-            - Off
+            - Offline
             - Allocating
             - Error
-            - On
+            - Running
         ingest:
           type: object
           description: liveEvent ingest object
@@ -748,11 +752,11 @@ components:
                       description: URL for backup input
                       readOnly: true
               required: [protocol]
-        liveEventChannelTranscode:
+        liveChannelTranscode:
           type: object
           description: object to store the transcoding profile configuration
           properties:
-            liveEventChannelTranscodeProfile:
+            liveChannelTranscodeProfile:
               type: string
               description: the encoding profile for this liveEvent
               example: Standard
@@ -781,7 +785,7 @@ components:
                   type: string
                   format: url
           required: [liveEventTranscodeProfile]
-        liveEventDestinationProfile:
+        liveChannelDestinationProfile:
           type: object
           description: multiple packaging profile configuration
           properties:
@@ -881,12 +885,12 @@ components:
     eventScheduler:
       type: object
       properties:
-        eventId:
+        id:
           type: string
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        eventName:
+        name:
           type: string
           description: simple name of the event
           example: Keynote
@@ -906,25 +910,25 @@ components:
           type: string
           format: datetime
           example: "2023-04-1T15:33:00+0000"        
-        liveEventChannelId:
+        liveChannelId:
           type: string
           format: uuid
-      required: [startTime,endTime,liveEventChannelId,eventName]
+      required: [startTime,endTime,liveChannelId,name]
     Channel:
       type: object
       properties:
-        liveEventChannelId:
+        id:
           type: string
           format: uuid
-        liveEventChannelName:
+        name:
           type: string
     Event:  
       type: object
       properties:
-        eventId:
+        id:
           type: string
           format: uuid
-        eventName:
+        name:
           type: string
     DestinationUrls:
       type: object
@@ -1044,9 +1048,18 @@ components:
           type: integer
           example: 100
           readOnly: true
-        liveEventNotificationsWebhookUrl:
-          type: string
-          format: url
+    NotificationSettings:
+      type: object
+      description: setting webhook url for notification
+      properties:
+        NotificationsWebhook:
+          type: object
+          properties:
+            url:
+              type: string
+              format: url
+            customHeader:
+              type: string
     originEndpoint:
       type: object
       properties:
