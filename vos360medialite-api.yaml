@@ -102,7 +102,7 @@ paths:
           - write:liveEvent
           - read:liveEvent
     post:
-      summary: Create a liveEvent
+      summary: Create a liveEvent Channel
       tags:
         - liveEvents
       description: create a liveEvent Channel
@@ -368,15 +368,15 @@ paths:
             - read:liveEvent
   /liveEvents/v1/events/{eventId}:
     get:
-      summary: Find event schedule by ID
+      summary: Find event by ID
       tags:
         - liveEvents
-      description: Returns a single event schedule
-      operationId: getEventScheduleById
+      description: Returns a single event
+      operationId: getEventById
       parameters:
         - name: eventId
           in: path
-          description: ID of event schedule to return
+          description: ID of event to return
           required: true
           schema:
             type: string
@@ -395,7 +395,7 @@ paths:
         '403':
           description: Forbidden   
         '404':
-          description: eventSchedule not found
+          description: Event not found
       security:
         - vos360lite_auth:
             - write:liveEvent
@@ -409,13 +409,13 @@ paths:
       parameters:
         - name: eventId
           in: path
-          description: ID of eventSchedule to return
+          description: ID of event to return
           required: true
           schema:
             type: string
             format: uuid
       requestBody:
-        description: modify a eventSchedule
+        description: modify an event
         content:
           application/json:
             schema:
@@ -424,13 +424,13 @@ paths:
         '200':
           description: successful operation
         '400':
-          description: Invalid eventScheduleId value
+          description: Invalid eventId value
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
         '404':
-          description: eventSchedule not found
+          description: event not found
         '405':
           description: Invalid input
       security:
@@ -438,7 +438,7 @@ paths:
             - write:liveEvent
             - read:liveEvent
     delete:
-      summary: Deletes a eventSchedule
+      summary: Deletes an event
       tags:
         - liveEvents
       description: delete an event
@@ -446,7 +446,7 @@ paths:
       parameters:
         - name: eventId
           in: path
-          description: ID of eventSchedule to return
+          description: ID of event to return
           required: true
           schema:
             type: string
@@ -455,13 +455,13 @@ paths:
         '200':
           description: successful operation
         '400':
-          description: Invalid eventScheduleId value
+          description: Invalid eventId value
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
         '404':
-          description: eventSchedule not found
+          description: event not found
       security:
         - vos360lite_auth:
             - write:liveEvent
@@ -476,7 +476,7 @@ paths:
       parameters:
         - name: eventId
           in: path
-          description: ID of Event Schedule to return
+          description: ID of Event to return
           required: true
           schema:
             type: string
@@ -497,7 +497,7 @@ paths:
         '403':
           description: Forbidden   
         '404':
-          description: eventSchedule not found
+          description: event not found
       security:
         - vos360lite_auth:
             - write:liveEvent
@@ -888,7 +888,7 @@ components:
           readOnly: true
         eventName:
           type: string
-          description: simple name of the scheduled event
+          description: simple name of the event
           example: Keynote
         state:
           type: string
@@ -909,10 +909,6 @@ components:
         liveEventChannelId:
           type: string
           format: uuid
-        isArchive:
-          type: boolean
-          example: true
-          readOnly: true
       required: [startTime,endTime,liveEventChannelId,eventName]
     Channel:
       type: object
@@ -1071,7 +1067,7 @@ components:
           schema:
             $ref: '#/components/schemas/liveEvent'
     eventScheduleRequest:
-      description: eventSchedule object that needs to be added
+      description: event object that needs to be added
       content:
          application/json:
           schema:
