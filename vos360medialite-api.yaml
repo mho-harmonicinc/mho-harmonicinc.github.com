@@ -124,7 +124,7 @@ paths:
             - read:live
   /live/v1/events/{id}:
     get:
-      summary: list a live Event details
+      summary: Show a live Event details
       tags:
         - live
       description: list a live Event
@@ -756,6 +756,66 @@ paths:
         - vos360lite_auth:
             - write:medialite
             - read:medialite
+  /origin-engine/v1/dynamicPackaging/{id}/offline:
+    put:
+      summary: Action to offline the Dynamic Packaging by id
+      tags:
+        - origin-engine
+      description: offline the Dynamic Packaging
+      operationId: offlineDynamicPackaging
+      parameters:
+        - name: id
+          in: path
+          description: Dynamic Packaging Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dynamic Packaging Offline Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+        '422':
+          description: Unprocessable Entity.  e.g. Not at Online state
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite    
+  /origin-engine/v1/dynamicPackaging/{id}/online:
+    put:
+      summary: Action to online the Dynamic Packaging by id
+      tags:
+        - origin-engine
+      description: online the Dynamic Packaging
+      operationId: onlineDynamicPackaging
+      parameters:
+        - name: id
+          in: path
+          description: Dynamic Packaging Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Dynamic Packaging Online Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+        '422':
+          description: Unprocessable Entity.  e.g. Not at Offline state
+      security:
+        - vos360lite_auth:
+            - write:medialite13
+            - read:medialite    
 components:
   schemas:
     liveEvent:
@@ -1075,7 +1135,6 @@ components:
         concurrentLiveEventSoftLimit:
           type: integer
           example: 100
-          readOnly: true
     NotificationSettings:
       type: object
       description: setting webhook url for notification
