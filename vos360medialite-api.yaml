@@ -7,6 +7,7 @@ info:
     - Live
     - Notification
     - origin-engine
+    - fileTranscode
     
   termsOfService: https://www.vos360medialite.video/terms/
   contact:
@@ -816,6 +817,199 @@ paths:
         - vos360lite_auth:
             - write:medialite13
             - read:medialite    
+  /fileTranscode/v1/jobs:
+    get:
+      summary: Get the list of jobs
+      tags:
+        - fileTranscode
+      description: File Transcode is job than transcode single bitrate source media into multi-bitrates media that can be used for playback with Dynamic Packaging as OTT streaming formats
+      operationId: getFileTranscodeJobs
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+            format: uuid
+        - in: query
+          name: outputFilename
+          schema:
+            type: string
+        - in: query
+          name: state
+          schema:
+            type: string
+            enum:
+            - Downloading
+            - Transcoding
+            - Uploadiing
+            - Completed
+            - Failed
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of file transcode jobs with status
+                readOnly: true
+                items:
+                  type: object
+                  properties:
+                    id: 
+                      type: string
+                      format: uuid
+                    outputFilename:
+                      type: string
+                      example: internalAffairsHD
+                    state:
+                      type: string
+                      example: Transcoding
+                      enum:
+                      - Downloading
+                      - Transcoding
+                      - Uploading
+                      - Completed
+                      - Failed
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+      security:
+      - vos360lite_auth:
+          - write:medialite
+          - read:medialite
+    post:
+      summary: Create File Transcoding Job
+      tags:
+        - fileTranscode
+      description: File Transcoding Job turns a single bitrate media into multi-bitrates content files for Dynamic Packaging into OTT streaming formats
+      operationId: createFileTranscodeJob
+      requestBody:
+        description: Create a new file transcoding job
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/FileTranscodeJob'
+
+        required: true
+      responses:
+        '201':
+          description: Dynamic Packaging Created
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/FileTranscodeJob'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite  
+  /fileTranscode/v1/jobs/{id}:
+    get:
+      summary: list file transcode job details
+      tags:
+        - fileTranscode
+      description: list file transcode job
+      operationId: listFileTranscodeJob
+      parameters:
+        - name: id
+          in: path
+          description: file transcode job Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File Transcode Job Details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/FileTranscodeJob'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite
+    delete:
+      summary: Delete a file transcode job
+      tags:
+        - fileTranscode
+      description: delete a File Transcode Job
+      operationId: deleteFileTranscodeJob
+      parameters:
+        - name: id
+          in: path
+          description: File Transcode Job Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File Transcode Job Deleted
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite  
+  /fileTranscode/v1/jobs/{id}/state:
+    get:
+      summary: get File Transcode job state
+      tags:
+        - fileTranscode
+      description: get file transcode job state
+      operationId: getFileTranscodeJobState
+      parameters:
+        - name: id
+          in: path
+          description: file transcode job Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File Transcode Job Details
+          content:
+            application/json:
+              schema:
+                type: string
+                enum:
+                  - Downloading
+                  - Transcoding
+                  - Uploading
+                  - Completed
+                  - Failed
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite
 components:
   schemas:
     liveEvent:
@@ -1193,7 +1387,7 @@ components:
             BlobEndpoint:
               type: string
               example: http://127.0.0.1:10000/devstoreaccount1
-        output:
+        outputs:
           description: Dynamic Packaging Output format/drm
           type: array
           items: 
@@ -1235,6 +1429,99 @@ components:
                   - webvtt
                   - imsc1
             required: [package,encryptionMethod]
+    FileTranscodeJob:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 34fd01fc-fee6-11ed-be56-0242ac120002
+          readOnly: true
+        outputFilename:
+          type: string
+          description: Output filename of the transcoded output
+          example: internalAffairsHD
+        state:
+          type: string
+          description: File Transcoding Job state
+          example: Transcoding
+          readOnly: True
+          enum:
+            - Downloading
+            - Transcoding
+            - Uploading
+            - Completed
+            - Failed
+        fileTranscodeProfile:
+          type: string
+          description: the encoding profile for this file job
+          example: Standard
+          enum:
+          - Standard
+          - Premium
+          - Passthrough
+        inputLocation:
+          type: object
+          description: storage account of the source media
+          properties:
+            filename:
+              type: string
+              example: internalAffairsHD35M.mxf
+            storage:
+              description: storage account information
+              type: object
+              properties:
+                accountName:
+                  type: string
+                  example: devstoreaccount1
+                accountKey:
+                  type: string
+                  example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
+                BlobEndpoint:
+                  type: string
+                  example: http://127.0.0.1:10000/devstoreaccount1           
+        outputLocation:
+            type: object
+            description: storage account of the transcoded output
+            properties:
+              storage:
+                description: storage account information
+                type: object
+                properties:
+                  accountName:
+                    type: string
+                    example: devstoreaccount1
+                  accountKey:
+                    type: string
+                    example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
+                  BlobEndpoint:
+                    type: string
+                    example: http://127.0.0.1:10000/devstoreaccount1  
+        AddOns:
+          type: object
+          description: Add on 
+          properties:
+            logoAddon:
+              type: object
+              description: object to store logo for overlay on video
+              properties:
+                imageUrl:
+                  type: string
+                  format: url
+                  description: url to download the logo png image
+                placement:
+                  type: string
+                  enum:
+                    - BOTTOM_LEFT
+                    - BOTTOM_RIGHT
+                    - TOP_RIGHT
+                    - TOP_LEFT
+                horizontalOffset:
+                  type: integer
+                  description: horizontal offset relative to placement in pixel
+                verticalOffset:
+                  type: integer
+                  description: veritcal offset relative to placement in pixel
   requestBodies:
     liveEventRequest:
       description: liveEvent object that needs to be added
@@ -1255,5 +1542,5 @@ components:
         implicit:
           authorizationUrl: https://vos360lite.vos360.video/oauth/authorize
           scopes:
-            write:liveEvent: modify liveEvents
-            read:liveEvent: read your liveEvents
+            write:live: modify liveEvents
+            read:live: read your liveEvents
