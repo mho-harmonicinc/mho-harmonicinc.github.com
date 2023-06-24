@@ -4,7 +4,7 @@ info:
   description: |-
     This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
 
-    - LiveEvents
+    - Live
     - Notification
     - origin-engine
     
@@ -21,18 +21,18 @@ externalDocs:
 servers: 
   - url: https://www.vos360medialite.video/api
 tags:
-  - name: liveEvents
+  - name: live
   - name: notification
   - name: origin-engine
 
 paths:
-  /live/v1/channels:
+  /live/v1/events:
     get:
-      summary: List all the live Channels
+      summary: List all the live Events
       tags:
-        - liveEvents
-      description: list all the live Channels
-      operationId: listLiveChannels
+        - live
+      description: list all the live Events
+      operationId: listLiveEvents
       parameters:
         - in: query
           name: id
@@ -44,21 +44,15 @@ paths:
           schema:
             type: string
         - in: query
-          name: controlState
+          name: state
           schema:
             type: string
             enum:
-            - Online
             - Offline
-        - in: query
-          name: operationState
-          schema:
-            type: string
-            enum:
-            - Stopped
             - Allocating
+            - Preview
             - Error
-            - Running
+            - Live
       responses:
         '200':
           description: Successful operation
@@ -66,7 +60,7 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of Channels with status
+                description: list of liveEvent with status
                 readOnly: true
                 items:
                   type: object
@@ -77,20 +71,15 @@ paths:
                     name:
                       type: string
                       example: Company Town Hall
-                    controlState:
+                    state:
                       type: string
-                      example: Activated
+                      example: Preview
                       enum:
-                      - Online
                       - Offline
-                    operationState:
-                      type: string
-                      example: On
-                      enum:
-                      - Stopped
                       - Allocating
-                      - Running
-                      - Error
+                      - Preview
+                      - Live
+                      - Ended
         '401':
           description: Unauthorized
         '403':
@@ -100,17 +89,19 @@ paths:
           - write:live
           - read:live
     post:
-      summary: Create a live Channel
+      summary: Create a live Event
       tags:
-        - liveEvents
-      description: create a live Channel
-      operationId: createLiveChannel
+        - live
+      description: create a live Event
+      operationId: createLiveEvent
       requestBody:
-        description: Create a new live Channel
+        description: Create a new live Event
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/liveEvent'
+              allOf:
+                - $ref: '#/components/schemas/liveEvent'
+                - $ref: '#/components/schemas/EventTimes'
         required: true
       responses:
         '201':
@@ -120,6 +111,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/liveEvent'
+                  - $ref: '#/components/schemas/EventTimes'
                   - $ref: '#/components/schemas/DestinationUrls'    
         '401':
           description: Unauthorized
@@ -131,301 +123,44 @@ paths:
         - vos360lite_auth:
             - write:live
             - read:live
-  /live/v1/channels/{id}:
-    get:
-      summary: Find live Channel by ID
-      tags:
-        - liveEvents
-      description: Returns a single live Channel
-      operationId: getLiveChannelById
-      parameters:
-        - name: id
-          in: path
-          description: ID of live Channel to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/liveEvent'          
-        '400':
-          description: Invalid ID supplied
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: live Channel not found
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
+  /live/v1/events/{id}:
     put:
-      summary: Updates a live Channel
+      summary: Update a live Event
       tags:
-        - liveEvents
-      description: Updates a single live Channel
-      operationId: updateLiveChannelById
+        - live
+      description: update a live Event
+      operationId: updateLiveEvent
       parameters:
         - name: id
           in: path
-          description: ID of live Chaneel to return
+          description: live event Id
           required: true
           schema:
             type: string
             format: uuid
       requestBody:
-        description: Create a new live Channel
+        description: Update a live Event
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/liveEvent'
-      responses:
-        '200':
-          description: successful operation
-        '400':
-          description: Invalid Id value
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: live Channel not found
-        '405':
-          description: Invalid input
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
-    delete:
-      summary: Deletes a live Channel
-      tags:
-        - liveEvents
-      description: delete a live Channel
-      operationId: deleteLiveChannel
-      parameters:
-        - name: id
-          in: path
-          description: ID of live to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: successful operation
-        '400':
-          description: Invalid Id value
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: liveEventChannel not found
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
-  /live/v1/channels/{id}/playback:
-    get:
-      summary: Live Channel Playback URLs
-      tags:
-        - liveEvents
-      description: Returns a URL endpoints of a liveChannel
-      operationId: getLiveChannelPlaybackUrlById
-      parameters:
-        - name: id
-          in: path
-          description: ID of live Channel to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                allOf:
-                - $ref: '#/components/schemas/Channel'  
-                - $ref: '#/components/schemas/DestinationUrls'          
-        '400':
-          description: Invalid ID supplied
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: live Event not found
-      security:
-      - vos360lite_auth:
-          - write:live
-          - read:live
-  /live/v1/events:
-    get:
-      summary: List of all events
-      tags:
-        - liveEvents
-      description: list all events
-      operationId: listEvents
-      parameters:
-        - in: query
-          name: name
-          schema:
-            type: string
-        - in: query
-          name: id
-          schema:
-            type: string
-            format: uuid
-        - in: query
-          name: state
-          schema:
-            type: string
-            enum:
-            - Offline
-            - Allocating
-            - Prepare
-            - Live
-            - Finished
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                type: array
-                description: list of events with status
-                readOnly: true
-                items:
-                  type: object
-                  properties:
-                    id: 
-                      type: string
-                      format: uuid
-                    name:
-                      type: string
-                      example: Keynote
-                    state:
-                      type: string
-                      example: On
-                      enum:
-                      - Offline
-                      - Allocating
-                      - Prepare
-                      - Live
-                      - Finished
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
-    post:
-      summary: Create an event
-      tags:
-        - liveEvents
-      description: create an event
-      operationId: createEvent
-      requestBody:
-        description: Create a new event 
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/eventScheduler'
+              allOf:
+                - $ref: '#/components/schemas/liveEvent'
+                - $ref: '#/components/schemas/EventTimes'
         required: true
       responses:
-        '201':
-          description: Event Created
+        '200':
+          description: Live Channel Updated
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/eventScheduler'
-                  - $ref: '#/components/schemas/DestinationUrls'
+                  - $ref: '#/components/schemas/liveEvent'
+                  - $ref: '#/components/schemas/EventTimes'
+                  - $ref: '#/components/schemas/DestinationUrls'    
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
-        '405':
-          description: Invalid input
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
-  /live/v1/events/{id}:
-    get:
-      summary: Find event by ID
-      tags:
-        - liveEvents
-      description: Returns a single event
-      operationId: getEventById
-      parameters:
-        - name: id
-          in: path
-          description: ID of event to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/eventScheduler'          
-        '400':
-          description: Invalid ID supplied
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: Event not found
-      security:
-        - vos360lite_auth:
-            - write:live
-            - read:live
-    put:
-      summary: Updates an event
-      tags:
-        - liveEvents
-      description: Updates a single event
-      operationId: updateEventById
-      parameters:
-        - name: id
-          in: path
-          description: ID of event to return
-          required: true
-          schema:
-            type: string
-            format: uuid
-      requestBody:
-        description: modify an event
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/eventScheduler'
-      responses:
-        '200':
-          description: successful operation
-        '400':
-          description: Invalid eventId value
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '404':
-          description: event not found
         '405':
           description: Invalid input
       security:
@@ -433,70 +168,200 @@ paths:
             - write:live
             - read:live
     delete:
-      summary: Deletes an event
+      summary: Delete a live Event
       tags:
-        - liveEvents
-      description: delete an event
-      operationId: deleteEvent
+        - live
+      description: delete a live Event
+      operationId: deleteLiveEvent
       parameters:
         - name: id
           in: path
-          description: ID of event to return
+          description: live event Id
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: successful operation
-        '400':
-          description: Invalid eventId value
+          description: Live Event Deleted
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
-        '404':
-          description: event not found
+        '405':
+          description: Invalid input
       security:
         - vos360lite_auth:
             - write:live
-            - read:live
-  /live/v1/events/{id}/playback:
-    get:
-      summary: Event Playback URLs
+            - read:live   
+  /live/v1/events/{id}/offline:
+    put:
+      summary: Action to offline the live event with id
       tags:
-        - liveEvents
-      description: Returns a URL endpoints of an event
-      operationId: getEventPlaybackUrlById
+        - live
+      description: offline the live event
+      operationId: offlineLiveEvent
       parameters:
         - name: id
           in: path
-          description: ID of Event to return
+          description: live event Id
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                allOf:
-                - $ref: '#/components/schemas/Event' 
-                - $ref: '#/components/schemas/DestinationUrls'          
-        '400':
-          description: Invalid ID supplied
+          description: Live Event Offline Success
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
-        '404':
-          description: event not found
+        '405':
+          description: Invalid input
       security:
         - vos360lite_auth:
             - write:live
-            - read:live
+            - read:live      
+  /live/v1/events/{id}/preview:
+    put:
+      summary: Action to preview the live event with id
+      tags:
+        - live
+      description: preview the live event
+      operationId: previewLiveEvent
+      parameters:
+        - name: id
+          in: path
+          description: live event Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Live Event Preview Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live 
+  /live/v1/events/{id}/goLive:
+    put:
+      summary: Action to goLive the live event with id
+      tags:
+        - live
+      description: goLive the live event
+      operationId: goLiveLiveEvent
+      parameters:
+        - name: id
+          in: path
+          description: live event Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Live Event goLive Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live 
+  /live/v1/events/{id}/end:
+    put:
+      summary: Action to end the live event with id
+      tags:
+        - live
+      description: End the live event
+      operationId: endLiveEvent
+      parameters:
+        - name: id
+          in: path
+          description: live event Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Live Event End Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live 
+  /live/v1/events/{id}/insertSlate:
+    put:
+      summary: Action to insert Slate image to the live event with id
+      tags:
+        - live
+      description: insert slate to the live event
+      operationId: insertSlateLiveEvent
+      parameters:
+        - name: id
+          in: path
+          description: live event Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Live Event Insert Slate Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live 
+  /live/v1/events/{id}/removeSlate:
+    put:
+      summary: Action to remove Slate image to the live event with id
+      tags:
+        - live
+      description: remove slate to the live event
+      operationId: removeSlateLiveEvent
+      parameters:
+        - name: id
+          in: path
+          description: live event Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Live Event Remove Slate Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:live
+            - read:live 
   /notification/v1/settings:
     get:
       summary: Notification webhook setting
@@ -552,7 +417,7 @@ paths:
     get:
       summary: Get live event app settings
       tags:
-        - liveEvents
+        - live
       description: returns the live settings
       operationId: getLiveSettings
       responses:
@@ -562,7 +427,7 @@ paths:
             application/json:
               schema:
                 type: object
-                description: liveEvents app settings
+                description: live app settings
                 properties:
                   concurrentLiveEventSoftLimit:
                     type: integer
@@ -579,11 +444,11 @@ paths:
     put:
       summary: Update liveEvents settings
       tags:
-        - liveEvents
+        - live
       description: returns the liveEvents settings
       operationId: updateLiveEventSettings
       requestBody:
-        description: Update LiveEvent settings
+        description: Update Live settings
         content:
           application/json:
             schema:
@@ -664,94 +529,31 @@ components:
           readOnly: true
         name:
           type: string
-          description: simple name of the liveEvent
-          example: College Football 
-        controlState:
+          description: simple name of the Event
+          example: College Football Final 2023
+        state:
           type: string
-          description: liveEvent Control State
-          example: Online
-          enum:
-            - Online
-            - Offline
-        operationState:
-          type: string
-          description: liveEvent Operation State
-          example: On
+          description: liveEvent State
+          example: Preview
           readOnly: true
           enum:
             - Offline
             - Allocating
-            - Error
-            - Running
+            - Preview
+            - Live
+            - Finished
         ingest:
           type: object
           description: liveEvent ingest object
           properties:
-            inputMonitor:
+             input:
               type: object
-              readOnly: true
+              description: liveEvent Cloud Source
               properties:
-                srtUrl:
+                cloudSourcePipeId:
                   type: string
-                  format: url
-                  readOnly: true
-                webrtcUrl:
-                  type: string
-                  format: url
-                  readOnly: true
-            input:
-              type: object
-              description: liveEvent inputs, failover from primary to backup is triggered by loss of input.  auto-revert back to primary input
-              properties:
-                protocol:
-                  type: string
-                  description: liveEvent input protocol
-                  example: srt
-                  enum:
-                    - srt
-                    - rtmp
-                protocolParameters:
-                  type: object
-                  description: protocol specifics
-                  properties:
-                    encryptionMode:
-                      type: string
-                      description: SRT AES encryption modes
-                      example: AES128
-                      enum:
-                        - NONE
-                        - AES128
-                        - AES192
-                        - AES256
-                    passphrase:
-                      type: string
-                      description: passphrase of SRT encryption
-                    streamKey:
-                      type: string
-                      description: rtmp streamKey                    
-                multiBitrate:
-                  type: object
-                  description: object to store config for multi-bitrate input
-                  properties:
-                    enableMultibitrate:
-                      type: boolean
-                      example: false
-                    numberOfProfiles:
-                      type: integer
-                      example: 3
-                      minimum: 2
-                      maximum: 20
-                primaryInputUrl:
-                      type: string
-                      format: url
-                      description: URL for primary input
-                      readOnly: true
-                backupInputUrl:
-                      type: string
-                      format: url
-                      description: URL for backup input
-                      readOnly: true
-              required: [protocol]
+                  format: uuid
+              required: [cloudSourceId]
         liveChannelTranscode:
           type: object
           description: object to store the transcoding profile configuration
@@ -781,6 +583,13 @@ components:
                 enableInputLossSlate:
                   type: boolean
                   example: true
+                imageUrl:
+                  type: string
+                  format: url
+            liveSlate:
+              type: object
+              description: slate image to cover the screen when event is live.  Use action to trigger slate on/off
+              properties:
                 imageUrl:
                   type: string
                   format: url
@@ -882,26 +691,9 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
-    eventScheduler:
+    EventTimes:
       type: object
       properties:
-        id:
-          type: string
-          format: uuid
-          example: 34fd01fc-fee6-11ed-be56-0242ac120002
-          readOnly: true
-        name:
-          type: string
-          description: simple name of the event
-          example: Keynote
-        state:
-          type: string
-          description: event state
-          example: Ready
-          readOnly: true
-          enum:
-            - Ready
-            - Unavailable
         startTime:
           type: string
           format: datetime
@@ -910,10 +702,7 @@ components:
           type: string
           format: datetime
           example: "2023-04-1T15:33:00+0000"        
-        liveChannelId:
-          type: string
-          format: uuid
-      required: [startTime,endTime,liveChannelId,name]
+      required: [startTime,endTime]
     Channel:
       type: object
       properties:
@@ -1042,7 +831,7 @@ components:
                 readOnly: true
     LiveEventsSettings:
       type: object
-      description: liveEvents app settings
+      description: live app settings
       properties:
         concurrentLiveEventSoftLimit:
           type: integer
