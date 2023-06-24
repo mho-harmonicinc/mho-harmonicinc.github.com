@@ -373,7 +373,7 @@ paths:
         '405':
           description: Invalid input
         '422':
-          description: Unprocessable Entity.  e.g. No slate to insert
+          description: Unprocessable Entity.  e.g. No slate to insert, or not at Offline/Preview/Live state
       security:
         - vos360lite_auth:
             - write:live
@@ -403,7 +403,7 @@ paths:
         '405':
           description: Invalid input
         '422':
-          description: Unprocessable Entity.  e.g. No slate to remove
+          description: Unprocessable Entity.  e.g. No slate to remove, or not at Offline/Preview/Live state
       security:
         - vos360lite_auth:
             - write:live
