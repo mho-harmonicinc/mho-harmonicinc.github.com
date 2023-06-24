@@ -873,7 +873,7 @@ components:
       content:
          application/json:
           schema:
-            $ref: '#/components/schemas/eventScheduler'
+            $ref: '#/components/schemas/EventTimes'
   securitySchemes:
     vos360lite_auth:
       type: oauth2
