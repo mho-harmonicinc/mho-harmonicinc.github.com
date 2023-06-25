@@ -4,10 +4,11 @@ info:
   description: |-
     This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
 
-    - Live
-    - Notification
+    - syndicate
+    - live
     - origin-engine
     - fileTranscode
+    - notification
     
   termsOfService: https://www.vos360medialite.video/terms/
   contact:
@@ -22,10 +23,192 @@ externalDocs:
 servers: 
   - url: https://www.vos360medialite.video/api
 tags:
+  - name: syndicate
   - name: live
-  - name: notification
   - name: origin-engine
+  - name: fileTranscode
+  - name: notification
 paths:
+  /syndicate/v1/cloudsource:
+    get:
+      summary: List all the Cloud Sources
+      tags:
+        - syndicate
+      description: list all the cloud sources
+      operationId: listCloudSources
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: state
+          schema:
+            type: string
+            enum:
+            - Online
+            - Offline
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of Cloud Sources
+                readOnly: true
+                items:
+                    $ref: '#/components/schemas/CloudSource'
+        '400':
+          description: Failed to return list of Cloud Sources
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '424':
+          description: Failed to return list of Cloud Sources because of failed dependency
+      security:
+      - vos360lite_auth:
+          - write:medialite
+          - read:medialite
+    post:
+      summary: Create a Cloud Source
+      tags:
+        - syndicate
+      description: create a cloud source
+      operationId: createCloudSource
+      requestBody:
+        description: Create a new Cloud Source
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudSource'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudSource'
+        '400':
+          description: Failed to create Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable entity to create Cloud Source 
+        '424':
+          description: Failed to create Cloud Source because dependency issue
+  /syndicate/v1/cloudsource/{pipeId}:
+    get:
+      summary: Get cloud source by pipeId
+      tags:
+        - syndicate
+      description: Get cloud source by pipeId
+      operationId: getCloudSourcebyPipeId
+      parameters:
+        - name: pipeId
+          in: path
+          description: Cloud Source pipeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudSource'
+        '400':
+          description: Failed to return Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified pipeId
+        '424':
+          description: Failed to get specific cloud source because of failed dependency     
+    delete:
+      summary: Delete a Cloud Source
+      tags:
+        - syndicate
+      description: delete a cloud source
+      operationId: deleteCloudSource
+      parameters:
+        - name: pipeId
+          in: path
+          description: Cloud Source pipeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Cloud Source Deleted
+        '400':
+          description: Failed to delete Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden  
+        '404':
+          description: Cannot find Cloud Source
+        '424':
+          description: Failed to delete Cloud Source because dependency issue
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite      
+  /syndicate/v1/cloudsource/{pipeId}/state:
+    put:
+      summary: Update cloud source state by pipeId
+      tags:
+        - syndicate
+      description: Update cloud source state by pipeId
+      operationId: updateCloudSourceStatebyPipeId
+      parameters:
+        - name: pipeId
+          in: path
+          description: Cloud Source pipeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: state
+          in: query
+          description: Cloud Source operation state
+          required: true
+          schema:
+            type: string
+            enum:
+              - Online
+              - Offline
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudSource'
+        '400':
+          description: Failed to return Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified pipeId
+        '424':
+          description: Failed to update Cloud Source state because dependency issue   
   /live/v1/events:
     get:
       summary: List all the live Events
@@ -125,11 +308,11 @@ paths:
             - read:live
   /live/v1/events/{id}:
     get:
-      summary: Show a live Event details
+      summary: Get a live Event details
       tags:
         - live
-      description: list a live Event
-      operationId: listLiveEvent
+      description: Get a live Event
+      operationId: getLiveEventDetails
       parameters:
         - name: id
           in: path
@@ -569,7 +752,7 @@ paths:
       tags:
         - origin-engine
       description: Dynamic Packaging is Package on the Fly (POTF) of multi-bitrate content to streaming formats.  It is tight to a storage account where mp4 or ismv files are located.  Each dynamic packaging configuration can have an account and packaging format/DRM configured.
-      operationId: getDynamicPackagingConfigs
+      operationId: listDynamicPackagingConfigs
       parameters:
         - in: query
           name: id
@@ -657,11 +840,11 @@ paths:
             - read:medialite  
   /origin-engine/v1/dynamicPackaging/{id}:
     get:
-      summary: list dynamic packaging details
+      summary: Get dynamic packaging details
       tags:
         - origin-engine
-      description: list dynamic packaging
-      operationId: listDynamicPackaging
+      description: get dynamic packaging
+      operationId: getDynamicPackagingDetails
       parameters:
         - name: id
           in: path
@@ -823,7 +1006,7 @@ paths:
       tags:
         - fileTranscode
       description: File Transcode is job than transcode single bitrate source media into multi-bitrates media that can be used for playback with Dynamic Packaging as OTT streaming formats
-      operationId: getFileTranscodeJobs
+      operationId: listFileTranscodeJobs
       parameters:
         - in: query
           name: id
@@ -896,7 +1079,7 @@ paths:
         required: true
       responses:
         '201':
-          description: Dynamic Packaging Created
+          description: File Transcoding Job Created
           content:
             application/json:
               schema:
@@ -914,11 +1097,11 @@ paths:
             - read:medialite  
   /fileTranscode/v1/jobs/{id}:
     get:
-      summary: list file transcode job details
+      summary: Get file transcode job details
       tags:
         - fileTranscode
-      description: list file transcode job
-      operationId: listFileTranscodeJob
+      description: Get file transcode job
+      operationId: getFileTranscodeJobDetails
       parameters:
         - name: id
           in: path
@@ -1043,7 +1226,7 @@ components:
               type: object
               description: liveEvent Cloud Source
               properties:
-                cloudSourcePipeId:
+                pipeId:
                   type: string
                   format: uuid
               required: [cloudSourceId]
@@ -1522,6 +1705,137 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
+    CloudSource:
+      type: object
+      properties:
+        backupIngress:
+          type: object
+          properties:
+            cryptoSetting:
+              type: object
+              properties:
+                key:
+                  type: string
+                method:
+                  type: string
+                  enum:
+                    - NONE
+                    - AES_128
+                    - AES_192
+                    - AES_256
+            platform:
+              type: string
+              example: Azure
+              readOnly: true
+            protocol: 
+              type: string
+              example: srt
+            region: 
+              type: string
+              readOnly: true
+            streamCount: 
+              type: integer
+              example: 0
+            url: 
+              type: string
+              format: url
+        customDnsName: 
+          type: string
+          format: url
+        groomingEndpoint:
+          type: object
+          properties:
+            cryptoSetting:
+              type: object
+              properties:
+                key: 
+                  type: string
+                method: 
+                  type: string
+                  enum:
+                    - NONE
+                    - AES_128
+                    - AES_192
+                    - AES_256
+            customUrl: 
+              type: string
+              format: url
+            url: 
+              type: string
+              format: url
+        ingress:
+          type: object
+          required: [protocol]
+          properties:
+            cryptoSetting:
+              type: object
+              properties:
+                key: 
+                  type: string
+                method:
+                  type: string
+                  enum:
+                   - NONE
+                   - AES_128
+                   - AES_192
+                   - AES_256
+            platform:
+              type: string
+              example: Azure
+              readOnly: true
+            protocol: 
+              type: string
+              example: srt
+            region: 
+              type: string
+              readOnly: true
+            streamCount: 
+              type: integer
+              example: 0
+            url: 
+              type: string
+              format: url
+        labels:
+          type: array
+          items:
+            type: string
+        maxOutputConnections: 
+          type: integer
+          example: 0
+        name: 
+          type: string
+        pipeId: 
+          type: string
+          format: uuid
+          readOnly: true
+        redundancyMode: 
+          type: string
+          enum:
+           - OFF
+           - ACTIVE-ACTIVE
+           - ACTIVE-STANDBY
+        state: 
+          type: string
+          enum:
+           - ONLINE
+           - OFFLINE
+        statistics:
+          type: object
+          properties:
+            egressStatistics:
+              type: object
+              properties:
+                egressSessionCount: 
+                  type: integer
+                  example: 0
+                  readOnly: true
+                egressThroughputInMbps: 
+                  type: integer
+                  example: 0
+                  readOnly: true
+        version: 
+          type: string
+      required: [name, state]
   requestBodies:
     liveEventRequest:
       description: liveEvent object that needs to be added
