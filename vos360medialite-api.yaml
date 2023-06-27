@@ -71,8 +71,11 @@ paths:
           description: Failed to return list of Cloud Sources because of failed dependency
       security:
       - vos360lite_auth:
-          - write:medialite
-          - read:medialite
+        - write:medialite
+        - read:medialite
+      - vos360_auth:
+        - write:vos360
+        - read:vos360
     post:
       summary: Create a Cloud Source
       tags:
@@ -105,6 +108,13 @@ paths:
           description: Unprocessable entity to create Cloud Source 
         '424':
           description: Failed to create Cloud Source because dependency issue
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite
+        - vos360_auth:
+            - write:vos360
+            - read:vos360
   /syndicate/v1/cloudsource/{pipeId}:
     get:
       summary: Get cloud source by pipeId
@@ -136,7 +146,14 @@ paths:
         '404':
           description: No cloud source with specified pipeId
         '424':
-          description: Failed to get specific cloud source because of failed dependency     
+          description: Failed to get specific cloud source because of failed dependency    
+      security:
+      - vos360lite_auth:
+          - write:medialite
+          - read:medialite
+      - vos360_auth:
+          - write:vos360
+          - read:vos360
     delete:
       summary: Delete a Cloud Source
       tags:
@@ -165,9 +182,12 @@ paths:
         '424':
           description: Failed to delete Cloud Source because dependency issue
       security:
-        - vos360lite_auth:
-            - write:medialite
-            - read:medialite      
+      - vos360lite_auth:
+          - write:medialite
+          - read:medialite
+      - vos360_auth:
+          - write:vos360
+          - read:vos360
   /syndicate/v1/cloudsource/{pipeId}/state:
     put:
       summary: Update cloud source state by pipeId
@@ -208,7 +228,14 @@ paths:
         '404':
           description: No cloud source with specified pipeId
         '424':
-          description: Failed to update Cloud Source state because dependency issue   
+          description: Failed to update Cloud Source state because dependency issue
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite
+        - vos360_auth:
+            - write:vos360
+            - read:vos360
   /live/v1/events:
     get:
       summary: List all the live Events
@@ -269,8 +296,8 @@ paths:
           description: Forbidden
       security:
       - vos360lite_auth:
-          - write:live
-          - read:live
+          - write:medialite
+          - read:medialite
     post:
       summary: Create a live Event
       tags:
@@ -304,8 +331,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
   /live/v1/events/{id}:
     get:
       summary: Get a live Event details
@@ -339,8 +366,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
     put:
       summary: Update a live Event
       tags:
@@ -382,8 +409,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
     delete:
       summary: Delete a live Event
       tags:
@@ -409,8 +436,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live   
+            - write:medialite
+            - read:medialite 
   /live/v1/events/{id}/offline:
     put:
       summary: Action to offline the live event with id
@@ -439,8 +466,8 @@ paths:
           description: Unprocessable Entity.  e.g. Not at Preview state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live      
+            - write:medialite
+            - read:medialite   
   /live/v1/events/{id}/preview:
     put:
       summary: Action to preview the live event with id
@@ -469,8 +496,8 @@ paths:
           description: Unprocessable Entity.  e.g. Not at Offline state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live 
+            - write:medialite
+            - read:medialite
   /live/v1/events/{id}/goLive:
     put:
       summary: Action to goLive the live event with id
@@ -499,8 +526,8 @@ paths:
           description: Unprocessable Entity.  e.g. Not at Preview state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live 
+            - write:medialite
+            - read:medialite
   /live/v1/events/{id}/end:
     put:
       summary: Action to end the live event with id
@@ -529,8 +556,8 @@ paths:
           description: Unprocessable Entity.  e.g. Not at Live state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live 
+            - write:medialite
+            - read:medialite
   /live/v1/events/{id}/insertSlate:
     put:
       summary: Action to insert Slate image to the live event with id
@@ -559,8 +586,8 @@ paths:
           description: Unprocessable Entity.  e.g. No slate to insert, or not at Offline/Preview/Live state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live 
+            - write:medialite
+            - read:medialite 
   /live/v1/events/{id}/removeSlate:
     put:
       summary: Action to remove Slate image to the live event with id
@@ -589,8 +616,8 @@ paths:
           description: Unprocessable Entity.  e.g. No slate to remove, or not at Offline/Preview/Live state
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live 
+            - write:medialite
+            - read:medialite
   /notification/v1/settings:
     get:
       summary: Notification webhook setting
@@ -611,8 +638,8 @@ paths:
           description: Forbidden
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
     put:
       summary: Update notification settings
       tags:
@@ -640,8 +667,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
   /live/v1/settings:
     get:
       summary: Get live event app settings
@@ -668,8 +695,8 @@ paths:
           description: Forbidden
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
     put:
       summary: Update liveEvents settings
       tags:
@@ -697,8 +724,8 @@ paths:
           description: Invalid input
       security:
         - vos360lite_auth:
-            - write:live
-            - read:live
+            - write:medialite
+            - read:medialite
   /origin-engine/v1/streamingEndpoint:
     get:
       summary: Get origin streaming endpoint related to streaming units reserved
@@ -719,33 +746,8 @@ paths:
           description: Forbidden
       security:
       - vos360lite_auth:
-          - write:live
-          - read:live
-    put:
-      summary: Updates the origin endpoint related to capacity reservation
-      tags:
-        - origin-engine
-      description: Updates the origin endpoint config
-      operationId: updateOriginEndpoint
-      requestBody:
-        description: modify the origin endpoint config
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/originEndpoint'
-      responses:
-        '200':
-          description: successful operation
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '405':
-          description: Invalid input
-      security:
-        - vos360lite_auth:
-            - write:medialite
-            - read:medialite
+          - write:medialite
+          - read:medialite
   /origin-engine/v1/dynamicPackaging:
     get:
       summary: Get the list of dynamic packaging config
@@ -1317,6 +1319,15 @@ components:
                       - webvtt
                       - imsc1
                 required: [package,encryptionMethod]
+        streamingEndpoint:
+          type: object
+          description: The streaming units this event would add to the vos360 media lite
+          properties:
+            addedStreamingUnits:
+              type: integer
+              example: 1
+              minimum: 1
+              maximum: 100
         addOns:
           type: object
           description: addon for optional features
@@ -1532,7 +1543,7 @@ components:
           properties:
             count:
               type: integer
-              description: the number of streaming units configured
+              description: the number of streaming units configured for this vos360 media lite system
               example: 2
               minimum: 0
               maximum: 100
@@ -1570,6 +1581,15 @@ components:
             BlobEndpoint:
               type: string
               example: http://127.0.0.1:10000/devstoreaccount1
+        streamingEndpoint:
+          type: object
+          properties:
+            addedStreamingUnits:
+              type: integer
+              description: the number of streaming units this dynamic packaging would add to the vos360 media lite when Online
+              example: 2
+              minimum: 1
+              maximum: 100
         outputs:
           description: Dynamic Packaging Output format/drm
           type: array
@@ -1816,11 +1836,13 @@ components:
            - ACTIVE-STANDBY
         state: 
           type: string
+          readOnly: true
           enum:
            - ONLINE
            - OFFLINE
         statistics:
           type: object
+          readOnly: true
           properties:
             egressStatistics:
               type: object
@@ -1856,5 +1878,13 @@ components:
         implicit:
           authorizationUrl: https://vos360lite.vos360.video/oauth/authorize
           scopes:
-            write:live: modify liveEvents
-            read:live: read your liveEvents
+            write:medialite: modify mediaLite config
+            read:medialite: read your mediaLite config
+    vos360_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://vos360.vos360.video/oauth/authorize
+          scopes:
+            write:vos360: modify vos360 config
+            read:vos360: read your vos360 config
