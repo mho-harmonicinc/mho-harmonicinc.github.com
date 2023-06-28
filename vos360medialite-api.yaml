@@ -1578,6 +1578,10 @@ components:
               minLength: 1
               maxLength: 30
               pattern: '([a-z]|[A-Z]|[0-9])+'
+            id:
+              type: string
+              format: uuid
+              readOnly: true
             accountName:
               type: string
               example: devstoreaccount1
