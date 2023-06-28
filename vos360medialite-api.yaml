@@ -1572,6 +1572,12 @@ components:
           description: storage account information
           type: object
           properties:
+            name:
+              type: string
+              example: collegefootballprodstorage
+              minLength: 1
+              maxLength: 30
+              pattern: '([a-z]|[A-Z]|[0-9])+'
             accountName:
               type: string
               example: devstoreaccount1
