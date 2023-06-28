@@ -4,7 +4,6 @@ info:
   description: |-
     This is the public API to configure, operate and monitor the VOS360-Lite.  The API is organized in categories.  They are:
 
-    - syndicate
     - live
     - origin-engine
     - fileTranscode
@@ -23,17 +22,16 @@ externalDocs:
 servers: 
   - url: https://www.vos360medialite.video/api
 tags:
-  - name: syndicate
   - name: live
   - name: origin-engine
   - name: fileTranscode
   - name: notification
 paths:
-  /syndicate/v1/cloudsource:
+  /live/v1/cloudsource:
     get:
       summary: List all the Cloud Sources
       tags:
-        - syndicate
+        - live
       description: list all the cloud sources
       operationId: listCloudSources
       parameters:
@@ -73,13 +71,10 @@ paths:
       - vos360lite_auth:
         - write:medialite
         - read:medialite
-      - vos360_auth:
-        - write:vos360
-        - read:vos360
     post:
       summary: Create a Cloud Source
       tags:
-        - syndicate
+        - live
       description: create a cloud source
       operationId: createCloudSource
       requestBody:
@@ -115,17 +110,17 @@ paths:
         - vos360_auth:
             - write:vos360
             - read:vos360
-  /syndicate/v1/cloudsource/{pipeId}:
+  /live/v1/cloudsource/{Id}:
     get:
-      summary: Get cloud source by pipeId
+      summary: Get cloud source by Id
       tags:
-        - syndicate
-      description: Get cloud source by pipeId
-      operationId: getCloudSourcebyPipeId
+        - live
+      description: Get cloud source by Id
+      operationId: getCloudSourcebyId
       parameters:
-        - name: pipeId
+        - name: Id
           in: path
-          description: Cloud Source pipeId
+          description: Cloud Source Id
           required: true
           schema:
             type: string
@@ -144,26 +139,23 @@ paths:
         '403':
           description: Forbidden
         '404':
-          description: No cloud source with specified pipeId
+          description: No cloud source with specified Id
         '424':
           description: Failed to get specific cloud source because of failed dependency    
       security:
       - vos360lite_auth:
           - write:medialite
           - read:medialite
-      - vos360_auth:
-          - write:vos360
-          - read:vos360
     delete:
       summary: Delete a Cloud Source
       tags:
-        - syndicate
+        - live
       description: delete a cloud source
       operationId: deleteCloudSource
       parameters:
-        - name: pipeId
+        - name: Id
           in: path
-          description: Cloud Source pipeId
+          description: Cloud Source Id
           required: true
           schema:
             type: string
@@ -185,20 +177,17 @@ paths:
       - vos360lite_auth:
           - write:medialite
           - read:medialite
-      - vos360_auth:
-          - write:vos360
-          - read:vos360
-  /syndicate/v1/cloudsource/{pipeId}/state:
+  /live/v1/cloudsource/{Id}/state:
     put:
-      summary: Update cloud source state by pipeId
+      summary: Update cloud source state by Id
       tags:
-        - syndicate
-      description: Update cloud source state by pipeId
-      operationId: updateCloudSourceStatebyPipeId
+        - live
+      description: Update cloud source state by Id
+      operationId: updateCloudSourceStatebyId
       parameters:
-        - name: pipeId
+        - name: Id
           in: path
-          description: Cloud Source pipeId
+          description: Cloud Source Id
           required: true
           schema:
             type: string
@@ -233,9 +222,6 @@ paths:
         - vos360lite_auth:
             - write:medialite
             - read:medialite
-        - vos360_auth:
-            - write:vos360
-            - read:vos360
   /live/v1/events:
     get:
       summary: List all the live Events
@@ -1209,6 +1195,11 @@ components:
           type: string
           description: simple name of the Event
           example: College Football Final 2023
+        labels:
+          type: array
+          items:
+            type: string
+            description: multiple labels to label the event
         state:
           type: string
           description: liveEvent State
@@ -1228,10 +1219,11 @@ components:
               type: object
               description: liveEvent Cloud Source
               properties:
-                pipeId:
+                Id:
                   type: string
                   format: uuid
-              required: [cloudSourceId]
+                  description: Cloud Source Id
+              required: [Id]
         liveChannelTranscode:
           type: object
           description: object to store the transcoding profile configuration
@@ -1264,13 +1256,7 @@ components:
                 imageUrl:
                   type: string
                   format: url
-            liveSlate:
-              type: object
-              description: slate image to cover the screen when event is live.  Use action to trigger slate on/off
-              properties:
-                imageUrl:
-                  type: string
-                  format: url
+
           required: [liveEventTranscodeProfile]
         liveChannelDestinationProfile:
           type: object
@@ -1302,16 +1288,66 @@ components:
                       - CBC
                       - CTR
                   package:
-                    type: string
-                    example: cmaf-dash
-                    enum:
-                      - cmaf-hls
-                      - cmaf-dash
-                      - hls-ts
-                      - dash
-                      - ll-hls
-                      - dash-ll
-                      - hss
+                    type: object
+                    properties:
+                      packageType:
+                        type: string
+                        example: cmaf-dash
+                        enum:
+                          - cmaf-hls
+                          - cmaf-dash
+                          - hls-ts
+                          - dash
+                          - ll-hls
+                          - dash-ll
+                          - hss
+                          - rtmp-push
+                      rtmpPushConfig:
+                        type: object
+                        description: configuration parameters for RTMP
+                        properties:
+                          enableRtmps:
+                            type: boolean
+                            example: false
+                          enableActiveStandby:
+                            type: boolean
+                            example: false
+                          primaryPublishingPoint:
+                            type: object
+                            properties:
+                              hostname:
+                                type: string
+                                format: url
+                              port:
+                                type: number
+                                example: 1935
+                                minimum: 0
+                                maximum: 65535
+                              username:
+                                type: string
+                              password:
+                                type: string
+                                writeOnly: true
+                              streamName:
+                                type: string
+                          secondaryPublishingPoint:
+                            type: object
+                            properties:
+                              hostname:
+                                type: string
+                                format: url
+                              port:
+                                type: number
+                                example: 1935
+                                minimum: 0
+                                maximum: 65535
+                              username:
+                                type: string
+                              password:
+                                type: string
+                                writeOnly: true
+                              streamName:
+                                type: string                          
                   embeddedSubtitle:
                     type: string
                     example: webvtt
@@ -1332,6 +1368,13 @@ components:
           type: object
           description: addon for optional features
           properties:
+            liveSlateAddon:
+              type: object
+              description: slate image to cover the screen when event is live.  Use action to trigger slate on/off
+              properties:
+                imageUrl:
+                  type: string
+                  format: url
             drmAddon: 
               type: object
               description: channel level configuration such as resource Id used for DRM
@@ -1381,7 +1424,7 @@ components:
     EventTimes:
       type: object
       properties:
-        startTime:
+        goLiveTime:
           type: string
           format: datetime
           example: "2023-04-1T12:23:00+0000"
@@ -1389,23 +1432,6 @@ components:
           type: string
           format: datetime
           example: "2023-04-1T15:33:00+0000"        
-      required: [startTime,endTime]
-    Channel:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-    Event:  
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
     DestinationUrls:
       type: object
       properties:
@@ -1485,37 +1511,6 @@ components:
                   format: url
                   description: Origin url for dash low latency output
                   readOnly: true
-    notificationHistory:
-      type: object
-      properties:
-        history:
-          type: array
-          description: list of notifications in the past 24 hours
-          items:
-            type: object
-            readOnly: true
-            properties:
-              notificationId:
-                type: string
-                format: uuid
-                readOnly: true
-              liveEventChannelId:
-                type: string
-                format: uuid
-                readOnly: true
-              liveEventChannelName:
-                type: string
-                readOnly: true
-                example: college football match 1
-              message:
-                type: string
-                maxLength: 1024
-                example: operation state change from 'Deploy' to 'On'
-                readOnly: true
-              noficationDateTime:
-                type: string
-                format: date-time
-                readOnly: true
     LiveEventsSettings:
       type: object
       description: live app settings
@@ -1559,6 +1554,11 @@ components:
           type: string
           description: simple name of the Dynamic Packaging
           example: All College Football Event Archive
+        labels:
+          type: array
+          items:
+            type: string
+            description: multiple labels to label the event
         state:
           type: string
           description: Dynamic Packaging State
@@ -1590,7 +1590,7 @@ components:
               example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
             BlobEndpoint:
               type: string
-              example: http://127.0.0.1:10000/devstoreaccount1
+              example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
         streamingEndpoint:
           type: object
           properties:
@@ -1654,6 +1654,11 @@ components:
           type: string
           description: Output filename of the transcoded output
           example: internalAffairsHD
+        labels:
+          type: array
+          items:
+            type: string
+            description: multiple labels to label the event
         state:
           type: string
           description: File Transcoding Job state
@@ -1769,30 +1774,6 @@ components:
             url: 
               type: string
               format: url
-        customDnsName: 
-          type: string
-          format: url
-        groomingEndpoint:
-          type: object
-          properties:
-            cryptoSetting:
-              type: object
-              properties:
-                key: 
-                  type: string
-                method: 
-                  type: string
-                  enum:
-                    - NONE
-                    - AES_128
-                    - AES_192
-                    - AES_256
-            customUrl: 
-              type: string
-              format: url
-            url: 
-              type: string
-              format: url
         ingress:
           type: object
           required: [protocol]
@@ -1831,10 +1812,10 @@ components:
             type: string
         maxOutputConnections: 
           type: integer
-          example: 0
+          example: 9
         name: 
           type: string
-        pipeId: 
+        Id: 
           type: string
           format: uuid
           readOnly: true
