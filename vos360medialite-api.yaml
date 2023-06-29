@@ -714,7 +714,7 @@ paths:
             - read:medialite
   /origin-engine/v1/streamingEndpoint:
     get:
-      summary: Get origin streaming endpoint related to streaming units reserved
+      summary: Get origin streaming endpoint related to streaming units reserved.  Live Event and Dynamic packaging automatic adds a Streaming Unit when online
       tags:
         - origin-engine
       description: returns the streaming capacity reservation
@@ -734,6 +734,35 @@ paths:
       - vos360lite_auth:
           - write:medialite
           - read:medialite
+    put:
+      summary: Update origin steraming endpoint streaming units reserved
+      tags:
+        - origin-engine
+      description: returns the Streaming Unit settings
+      operationId: updateStreamingUnitSettings
+      requestBody:
+        description: Update Streaming Units settings
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/originEndpoint'
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/originEndpoint'          
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vos360lite_auth:
+            - write:medialite
+            - read:medialite
   /origin-engine/v1/dynamicPackaging:
     get:
       summary: Get the list of dynamic packaging config
@@ -1223,7 +1252,7 @@ components:
                   type: string
                   format: uuid
                   description: Cloud Source Id
-              required: [Id]
+              required: [id]
         liveChannelTranscode:
           type: object
           description: object to store the transcoding profile configuration
@@ -1355,15 +1384,6 @@ components:
                       - webvtt
                       - imsc1
                 required: [package,encryptionMethod]
-        streamingEndpoint:
-          type: object
-          description: The streaming units this event would add to the vos360 media lite
-          properties:
-            addedStreamingUnits:
-              type: integer
-              example: 1
-              minimum: 1
-              maximum: 100
         addOns:
           type: object
           description: addon for optional features
@@ -1591,15 +1611,6 @@ components:
             BlobEndpoint:
               type: string
               example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
-        streamingEndpoint:
-          type: object
-          properties:
-            addedStreamingUnits:
-              type: integer
-              description: the number of streaming units this dynamic packaging would add to the vos360 media lite when Online
-              example: 2
-              minimum: 1
-              maximum: 100
         outputs:
           description: Dynamic Packaging Output format/drm
           type: array
