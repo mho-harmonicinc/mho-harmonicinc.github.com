@@ -27,7 +27,7 @@ tags:
   - name: fileTranscode
   - name: notification
 paths:
-  /live/v1/cloudsource:
+  /live/v1/cloudsources:
     get:
       summary: List all the Cloud Sources
       tags:
@@ -110,7 +110,7 @@ paths:
         - vos360_auth:
             - write:vos360
             - read:vos360
-  /live/v1/cloudsource/{Id}:
+  /live/v1/cloudsources/{id}:
     get:
       summary: Get cloud source by Id
       tags:
@@ -118,7 +118,7 @@ paths:
       description: Get cloud source by Id
       operationId: getCloudSourcebyId
       parameters:
-        - name: Id
+        - name: id
           in: path
           description: Cloud Source Id
           required: true
@@ -153,7 +153,7 @@ paths:
       description: delete a cloud source
       operationId: deleteCloudSource
       parameters:
-        - name: Id
+        - name: id
           in: path
           description: Cloud Source Id
           required: true
@@ -177,7 +177,7 @@ paths:
       - vos360lite_auth:
           - write:medialite
           - read:medialite
-  /live/v1/cloudsource/{Id}/state:
+  /live/v1/cloudsources/{id}/state:
     put:
       summary: Update cloud source state by Id
       tags:
@@ -185,7 +185,7 @@ paths:
       description: Update cloud source state by Id
       operationId: updateCloudSourceStatebyId
       parameters:
-        - name: Id
+        - name: id
           in: path
           description: Cloud Source Id
           required: true
@@ -1815,7 +1815,7 @@ components:
           example: 9
         name: 
           type: string
-        Id: 
+        id: 
           type: string
           format: uuid
           readOnly: true
