@@ -1240,150 +1240,149 @@ components:
             - Preview
             - Live
             - Finished
-        ingest:
+        input:
           type: object
-          description: liveEvent ingest object
+          description: liveEvent Cloud Source
           properties:
-             input:
-              type: object
-              description: liveEvent Cloud Source
-              properties:
-                Id:
-                  type: string
-                  format: uuid
-                  description: Cloud Source Id
-              required: [id]
-        liveChannelTranscode:
-          type: object
-          description: object to store the transcoding profile configuration
-          properties:
-            liveChannelTranscodeProfile:
+            id:
               type: string
-              description: the encoding profile for this liveEvent
-              example: Standard
-              enum:
-              - Standard
-              - Premium
-              - Passthrough
-            liveTranscription:
-              type: object
-              description: speech to text transcription to insert to CEA608/708
-              properties:
-                enableLiveTranscription:
-                  type: boolean
-                  example: true
-                language:
-                  type: string
-                  example: eng
-            inputLossSlate:
-              type: object
-              description: slate image to cover the screen when input signal loss when transcoding is in used
-              properties:
-                enableInputLossSlate:
-                  type: boolean
-                  example: true
-                imageUrl:
-                  type: string
-                  format: url
-
-          required: [liveEventTranscodeProfile]
-        liveChannelDestinationProfile:
+              format: uuid
+              description: Cloud Source Id
+          required: [id]
+        transcodingProfile:
+          type: string
+          description: the encoding profile for this liveEvent
+          example: Standard
+          enum:
+          - Standard
+          - Premium
+          - Passthrough
+        liveTranscription:
           type: object
-          description: multiple packaging profile configuration
+          description: speech to text transcription to insert to CEA608/708
           properties:
-            output:
-              type: array
-              description: list of packages profile configuration
-              items:
+            enableLiveTranscription:
+              type: boolean
+              example: true
+            language:
+              type: string
+              example: eng
+        inputLossSlate:
+          type: object
+          description: slate image to cover the screen when input signal loss when transcoding is in used
+          properties:
+            enableInputLossSlate:
+              type: boolean
+              example: true
+            imageUrl:
+              type: string
+              format: url
+        packagingProfile:
+          type: string
+          example: Standard
+          enum:
+          - Standard
+          - Premium
+        publishName:
+          type: string
+          description: Name used in the URLs to identify the event.  This needs to be unique and no space and special characters
+          example: footballFinal2023
+          minLength: 1
+          maxLength: 30
+          pattern: '([a-z]|[A-Z]|[0-9])+'
+        output:
+          type: array
+          description: list of packages profile configuration
+          items:
+            type: object
+            description: each output is a package
+            properties:
+              destinationOutputId:
+                type: string
+                format: uuid
+                readOnly: true
+              encryptionMethod:
+                type: string
+                example: CENC 
+                enum:
+                - Clear
+                - AES
+                - Fairplay
+                - CENC
+              drmDatapathConfig:
+                type: string
+                example: CBC
+                enum:
+                  - CBC
+                  - CTR
+              package:
                 type: object
-                description: each output is a package
                 properties:
-                  destinationOutputId:
+                  packageType:
                     type: string
-                    format: uuid
-                    readOnly: true
-                  encryptionMethod:
-                    type: string
-                    example: CENC 
+                    example: cmaf-dash
                     enum:
-                    - Clear
-                    - AES
-                    - Fairplay
-                    - CENC
-                  drmDatapathConfig:
-                    type: string
-                    example: CBC
-                    enum:
-                      - CBC
-                      - CTR
-                  package:
+                      - cmaf-hls
+                      - cmaf-dash
+                      - hls-ts
+                      - dash
+                      - ll-hls
+                      - dash-ll
+                      - hss
+                      - rtmp-push
+                  rtmpPushConfig:
                     type: object
+                    description: configuration parameters for RTMP
                     properties:
-                      packageType:
-                        type: string
-                        example: cmaf-dash
-                        enum:
-                          - cmaf-hls
-                          - cmaf-dash
-                          - hls-ts
-                          - dash
-                          - ll-hls
-                          - dash-ll
-                          - hss
-                          - rtmp-push
-                      rtmpPushConfig:
+                      enableRtmps:
+                        type: boolean
+                        example: false
+                      enableActiveStandby:
+                        type: boolean
+                        example: false
+                      primaryPublishingPoint:
                         type: object
-                        description: configuration parameters for RTMP
                         properties:
-                          enableRtmps:
-                            type: boolean
-                            example: false
-                          enableActiveStandby:
-                            type: boolean
-                            example: false
-                          primaryPublishingPoint:
-                            type: object
-                            properties:
-                              hostname:
-                                type: string
-                                format: url
-                              port:
-                                type: number
-                                example: 1935
-                                minimum: 0
-                                maximum: 65535
-                              username:
-                                type: string
-                              password:
-                                type: string
-                                writeOnly: true
-                              streamName:
-                                type: string
-                          secondaryPublishingPoint:
-                            type: object
-                            properties:
-                              hostname:
-                                type: string
-                                format: url
-                              port:
-                                type: number
-                                example: 1935
-                                minimum: 0
-                                maximum: 65535
-                              username:
-                                type: string
-                              password:
-                                type: string
-                                writeOnly: true
-                              streamName:
-                                type: string                          
-                  embeddedSubtitle:
-                    type: string
-                    example: webvtt
-                    enum:
-                      - webvtt
-                      - imsc1
-                required: [package,encryptionMethod]
+                          hostname:
+                            type: string
+                            format: url
+                          port:
+                            type: number
+                            example: 1935
+                            minimum: 0
+                            maximum: 65535
+                          username:
+                            type: string
+                          password:
+                            type: string
+                            writeOnly: true
+                          streamName:
+                            type: string
+                      secondaryPublishingPoint:
+                        type: object
+                        properties:
+                          hostname:
+                            type: string
+                            format: url
+                          port:
+                            type: number
+                            example: 1935
+                            minimum: 0
+                            maximum: 65535
+                          username:
+                            type: string
+                          password:
+                            type: string
+                            writeOnly: true
+                          streamName:
+                            type: string     
+              embeddedSubtitle:
+                type: string
+                example: webvtt
+                enum:
+                  - webvtt
+                  - imsc1
+            required: [package,encryptionMethod]
         addOns:
           type: object
           description: addon for optional features
@@ -1441,6 +1440,7 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
+      required: [publishName, name, id, transcodingProfile, input, output]
     EventTimes:
       type: object
       properties:
