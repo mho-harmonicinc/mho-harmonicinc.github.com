@@ -1315,67 +1315,64 @@ components:
                 enum:
                   - CBC
                   - CTR
-              package:
+              packageType:
+                type: string
+                example: cmaf-dash
+                enum:
+                  - cmaf-hls
+                  - cmaf-dash
+                  - hls-ts
+                  - dash
+                  - ll-hls
+                  - dash-ll
+                  - hss
+                  - rtmp-push
+              rtmpPushConfig:
                 type: object
+                description: configuration parameters for RTMP
                 properties:
-                  packageType:
-                    type: string
-                    example: cmaf-dash
-                    enum:
-                      - cmaf-hls
-                      - cmaf-dash
-                      - hls-ts
-                      - dash
-                      - ll-hls
-                      - dash-ll
-                      - hss
-                      - rtmp-push
-                  rtmpPushConfig:
+                  enableRtmps:
+                    type: boolean
+                    example: false
+                  enableActiveStandby:
+                    type: boolean
+                    example: false
+                  primaryPublishingPoint:
                     type: object
-                    description: configuration parameters for RTMP
                     properties:
-                      enableRtmps:
-                        type: boolean
-                        example: false
-                      enableActiveStandby:
-                        type: boolean
-                        example: false
-                      primaryPublishingPoint:
-                        type: object
-                        properties:
-                          hostname:
-                            type: string
-                            format: url
-                          port:
-                            type: number
-                            example: 1935
-                            minimum: 0
-                            maximum: 65535
-                          username:
-                            type: string
-                          password:
-                            type: string
-                            writeOnly: true
-                          streamName:
-                            type: string
-                      secondaryPublishingPoint:
-                        type: object
-                        properties:
-                          hostname:
-                            type: string
-                            format: url
-                          port:
-                            type: number
-                            example: 1935
-                            minimum: 0
-                            maximum: 65535
-                          username:
-                            type: string
-                          password:
-                            type: string
-                            writeOnly: true
-                          streamName:
-                            type: string     
+                      hostname:
+                        type: string
+                        format: url
+                      port:
+                        type: number
+                        example: 1935
+                        minimum: 0
+                        maximum: 65535
+                      username:
+                        type: string
+                      password:
+                        type: string
+                        writeOnly: true
+                      streamName:
+                        type: string
+                  secondaryPublishingPoint:
+                    type: object
+                    properties:
+                      hostname:
+                        type: string
+                        format: url
+                      port:
+                        type: number
+                        example: 1935
+                        minimum: 0
+                        maximum: 65535
+                      username:
+                        type: string
+                      password:
+                        type: string
+                        writeOnly: true
+                      streamName:
+                        type: string     
               embeddedSubtitle:
                 type: string
                 example: webvtt
