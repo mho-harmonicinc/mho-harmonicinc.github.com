@@ -1244,7 +1244,7 @@ components:
           type: object
           description: liveEvent Cloud Source
           properties:
-            id:
+            cloudSourceId:
               type: string
               format: uuid
               description: Cloud Source Id
@@ -1608,7 +1608,7 @@ components:
             BlobEndpoint:
               type: string
               example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
-        outputs:
+        output:
           description: Dynamic Packaging Output format/drm
           type: array
           items: 
