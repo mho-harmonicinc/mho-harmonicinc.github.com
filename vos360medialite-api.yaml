@@ -1031,7 +1031,7 @@ paths:
             type: string
             format: uuid
         - in: query
-          name: outputFilename
+          name: outputAssetName
           schema:
             type: string
         - in: query
@@ -1608,7 +1608,7 @@ components:
             objectStorageEndpoint:
               type: string
               example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
-        output:
+        outputs:
           description: Dynamic Packaging Output format/drm
           type: array
           items: 
