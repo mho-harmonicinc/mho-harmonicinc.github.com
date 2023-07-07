@@ -1189,7 +1189,7 @@ paths:
             format: uuid
       responses:
         '200':
-          description: File Transcode Job Details
+          description: File Transcode Job State
           content:
             application/json:
               schema:
@@ -1605,7 +1605,7 @@ components:
             accountKey:
               type: string
               example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
-            BlobEndpoint:
+            objectStorageEndpoint:
               type: string
               example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
         output:
@@ -1658,10 +1658,16 @@ components:
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        outputFilename:
+        outputAssetName:
           type: string
           description: Output filename of the transcoded output
           example: internalAffairsHD
+        outputAssetId:
+          type: string
+          format: uuid
+          description: Output asset ID of the transcoded output used for Dynamic Packaging
+          example: a46f9196-198d-11ee-be56-0242ac120002
+          readOnly: true
         labels:
           type: array
           items:
@@ -1673,12 +1679,13 @@ components:
           example: Transcoding
           readOnly: True
           enum:
+            - Pending
             - Downloading
             - Transcoding
             - Uploading
             - Completed
             - Failed
-        fileTranscodeProfile:
+        transcodeProfile:
           type: string
           description: the encoding profile for this file job
           example: Standard
@@ -1686,6 +1693,16 @@ components:
           - Standard
           - Premium
           - Passthrough
+        liveTranscription:
+          type: object
+          description: speech to text transcription to insert to CEA608/708
+          properties:
+            enableLiveTranscription:
+              type: boolean
+              example: true
+            language:
+              type: string
+              example: eng  
         inputLocation:
           type: object
           description: storage account of the source media
@@ -1703,9 +1720,9 @@ components:
                 accountKey:
                   type: string
                   example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
-                BlobEndpoint:
+                objectStorageEndpoint:
                   type: string
-                  example: http://127.0.0.1:10000/devstoreaccount1           
+                  example: https://collegesports.blob.core.windows.net/devInputContentContainer
         outputLocation:
             type: object
             description: storage account of the transcoded output
@@ -1720,9 +1737,9 @@ components:
                   accountKey:
                     type: string
                     example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
-                  BlobEndpoint:
+                  objectStorageEndpoint:
                     type: string
-                    example: http://127.0.0.1:10000/devstoreaccount1  
+                    example: https://collegesports.blob.core.windows.net/devOutputContentContainer 
         AddOns:
           type: object
           description: Add on 
