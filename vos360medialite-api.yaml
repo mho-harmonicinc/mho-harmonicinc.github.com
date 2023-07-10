@@ -714,7 +714,7 @@ paths:
             - read:medialite
   /origin-engine/v1/streamingEndpoint:
     get:
-      summary: Get origin streaming endpoint related to streaming units reserved.  Live Event and Dynamic packaging automatic adds a Streaming Unit when online
+      summary: Get origin streaming endpoint related to streaming units reserved.  The streaming units are shared with all Live Events and Dynamic Packaging outputs
       tags:
         - origin-engine
       description: returns the streaming capacity reservation
@@ -1575,7 +1575,7 @@ components:
           type: array
           items:
             type: string
-            description: multiple labels to label the event
+            description: multiple labels to label the dynamic packaging
         state:
           type: string
           description: Dynamic Packaging State
@@ -1672,7 +1672,7 @@ components:
           type: array
           items:
             type: string
-            description: multiple labels to label the event
+            description: multiple labels to label the file transcode job
         state:
           type: string
           description: File Transcoding Job state
