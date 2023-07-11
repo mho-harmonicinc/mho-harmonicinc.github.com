@@ -275,7 +275,7 @@ paths:
                       - Allocating
                       - Preview
                       - Live
-                      - Ended
+                      - Finished
         '401':
           description: Unauthorized
         '403':
@@ -1550,12 +1550,12 @@ components:
     originEndpoint:
       type: object
       properties:
-        minStreamingUnits:
+        streamingUnits:
           type: object
           properties:
             count:
               type: integer
-              description: the minimum number of streaming units configured for this vos360 media lite system.  It is possible that the vos360 media auto scales to more Streaming Units
+              description: the number of streaming units configured for this vos360 media lite system
               example: 2
               minimum: 0
               maximum: 100
