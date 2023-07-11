@@ -240,6 +240,10 @@ paths:
           schema:
             type: string
         - in: query
+          name: labels
+          schema:
+            type: string
+        - in: query
           name: state
           schema:
             type: string
@@ -781,6 +785,10 @@ paths:
           schema:
             type: string
         - in: query
+          name: labels
+          schema:
+            type: string
+        - in: query
           name: state
           schema:
             type: string
@@ -844,7 +852,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/DestinationUrls'    
+                  - $ref: '#/components/schemas/VodDestinationUrls'    
         '401':
           description: Unauthorized
         '403':
@@ -878,7 +886,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/DestinationUrls'    
+                  - $ref: '#/components/schemas/VodDestinationUrls'    
         '401':
           description: Unauthorized
         '403':
@@ -919,7 +927,7 @@ paths:
               schema:
                 allOf:
                   - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/DestinationUrls'    
+                  - $ref: '#/components/schemas/VodDestinationUrls'    
         '401':
           description: Unauthorized
         '403':
@@ -1032,6 +1040,10 @@ paths:
             format: uuid
         - in: query
           name: outputAssetName
+          schema:
+            type: string
+        - in: query
+          name: labels
           schema:
             type: string
         - in: query
@@ -1375,8 +1387,10 @@ components:
                         type: string     
               embeddedSubtitle:
                 type: string
+                description: converts CEA608/708 to webvtt, imsc1 or kept at SEI
                 example: webvtt
                 enum:
+                  - passthrough
                   - webvtt
                   - imsc1
             required: [package,encryptionMethod]
@@ -1528,6 +1542,66 @@ components:
                   format: url
                   description: Origin url for dash low latency output
                   readOnly: true
+    VodDestinationUrls:
+      type: object
+      properties:
+        playbackUrls:
+          type: object
+          description: list of URLs
+          properties:
+            cdnUrls:
+              type: object
+              description: list of CDN URL endpoints
+              properties:
+                cmafDashUrl:
+                  type: string
+                  format: url
+                  description: CDN url for cmaf dash output
+                cmafHlsUrl:
+                  type: string
+                  format: url
+                  description: CDN url for cmaf hls output
+                hlsTsUrl:
+                  type: string
+                  format: url
+                  description: CDN url for hls ts output
+                dashUrl:
+                  type: string
+                  format: url
+                  description: CDN url for dash output
+                ssUrl:
+                  type: string
+                  format: url
+                  description: CDN url for http smooth streaming output
+            originUrls:
+              type: object
+              description: list of Origin URL endpoints
+              properties:
+                cmafDashUrl:
+                  type: string
+                  format: url
+                  description: Origin url for cmaf dash output
+                  readOnly: true
+                cmafHlsUrl:
+                  type: string
+                  format: url
+                  description: Origin url for cmaf hls output
+                  readOnly: true
+                hlsTsUrl:
+                  type: string
+                  format: url
+                  description: Origin url for hls ts output
+                  readOnly: true
+                dashUrl:
+                  type: string
+                  format: url
+                  description: Origin url for dash output
+                  readOnly: true
+                ssUrl:
+                  type: string
+                  format: url
+                  description: Origin url for http smooth streaming output
+                  readOnly: true
     LiveEventsSettings:
       type: object
       description: live app settings
@@ -1550,15 +1624,25 @@ components:
     originEndpoint:
       type: object
       properties:
-        streamingUnits:
-          type: object
-          properties:
-            count:
-              type: integer
-              description: the number of streaming units configured for this vos360 media lite system
-              example: 2
-              minimum: 0
-              maximum: 100
+        minStreamingUnits:
+          type: integer
+          description: the minimum number of streaming units configured for this vos360 media lite system
+          example: 2
+          minimum: 0
+          maximum: 100
+        maxStreamingUnits:
+          type: integer
+          description: the maximum number of streaming units configured for this vos360 media lite system
+          example: 10
+          minimum: 0
+          maximum: 100
+        activeStreamingUnits:
+          type: integer
+          description: the number of streaming units actively running on this vos360 media lite system
+          example: 3
+          minimum: 0
+          maximum: 100
+          readOnly: true
     DynamicPackaging:
       type: object
       properties:
@@ -1640,8 +1724,6 @@ components:
                   - cmaf-dash
                   - hls-ts
                   - dash
-                  - ll-hls
-                  - dash-ll
                   - hss
               embeddedSubtitle:
                 type: string
