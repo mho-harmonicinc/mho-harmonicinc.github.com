@@ -82,7 +82,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CloudSource'
+              $ref: '#/components/schemas/CloudSourceCreate'
         required: true
       responses:
         '201':
@@ -1437,10 +1437,12 @@ components:
       type: object
       properties:
         goLiveTime:
+          readOnly: true
           type: string
           format: datetime
           example: "2023-04-1T12:23:00+0000"
         endTime:
+          readOnly: true
           type: string
           format: datetime
           example: "2023-04-1T15:33:00+0000"        
@@ -1822,6 +1824,42 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
+    CloudSourceCreate:
+      type: object
+      properties:
+        cryptoSetting:
+          properties:
+            key:
+              type: string
+            method:
+              type: string
+              enum:
+                - NONE
+                - AES_128
+                - AES_192
+                - AES_256
+        labels:
+          type: array
+          items:
+            type: string
+        maxOutputConnections: 
+          type: integer
+          example: 9
+        protocol:
+          type: string
+          enum: 
+            - SRT
+            - RTMP
+        redundancyMode:
+          type: string
+          enum:
+           - NONE
+           - ACTIVE-ACTIVE
+           - ACTIVE-STANDBY
+        streamCount:
+          type: integer
+          maximum: 20
+          example: 0
     CloudSource:
       type: object
       properties:
@@ -1906,7 +1944,7 @@ components:
         redundancyMode: 
           type: string
           enum:
-           - OFF
+           - NONE
            - ACTIVE-ACTIVE
            - ACTIVE-STANDBY
         state: 
