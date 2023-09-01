@@ -192,14 +192,14 @@ paths:
       responses:
         '200':
           description: Cloud Source Offline Success
+        '400':
+          description: Bad Request
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
-        '405':
-          description: Invalid input
-        '422':
-          description: Unprocessable Entity.  e.g. Not at Online state
+        '404':
+          description: Cloud Source Not Found
       security:
         - vosio_auth:
             - write:vosio
@@ -222,18 +222,158 @@ paths:
       responses:
         '200':
           description: Cloud Source Online Success
+        '400':
+          description: Bad Request
         '401':
           description: Unauthorized
         '403':
           description: Forbidden   
-        '405':
-          description: Invalid input
-        '422':
-          description: Unprocessable Entity.  e.g. Not at Offline state
+        '404':
+          description: Cloud Source Not Found
       security:
         - vosio_auth:
             - write:vosio
             - read:vosio
+  /live/v1/images:
+    get:
+      summary: List all the images
+      tags:
+        - live
+      description: list all the images
+      operationId: listImages
+      parameters:
+        - in: query
+          name: id
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                description: list of Images
+                readOnly: true
+                items:
+                  $ref: '#/components/schemas/Images'
+        '400':
+          description: Failed to return list of images
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '424':
+          description: Failed to return list of images
+      security:
+      - vosio_auth:
+        - write:vosio
+        - read:vosio
+    post:
+      summary: Create an image
+      tags:
+        - live
+      description: create an image
+      operationId: createImage
+      requestBody:
+        description: Create a new image
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Images'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Images'
+        '400':
+          description: Failed to create Image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable entity to create image
+        '424':
+          description: Failed to create image
+      security:
+        - vosio_auth:
+            - write:vosio
+            - read:vosio   
+  /live/v1/images/{id}:
+    get:
+      summary: Get image by Id
+      tags:
+        - live
+      description: Get image by Id
+      operationId: getImagebyId
+      parameters:
+        - name: id
+          in: path
+          description: Image Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Images'
+        '400':
+          description: Failed to return image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No image with specified Id
+        '424':
+          description: Failed to get specific image    
+      security:
+      - vosio_auth:
+          - write:vosio
+          - read:vosio
+    delete:
+      summary: Delete an image
+      tags:
+        - live
+      description: delete an image
+      operationId: deleteImage
+      parameters:
+        - name: id
+          in: path
+          description: Image Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Image Deleted
+        '400':
+          description: Failed to delete Image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden  
+        '404':
+          description: Cannot find Image
+        '424':
+          description: Failed to delete Image
+      security:
+      - vosio_auth:
+          - write:vosio
+          - read:vosio           
   /live/v1/events:
     get:
       summary: List all the live Events
@@ -1298,9 +1438,9 @@ components:
             enableInputLossSlate:
               type: boolean
               example: true
-            imageUrl:
+            imageId:
               type: string
-              format: url
+              format: uuid
         packagingProfile:
           type: string
           example: Standard
@@ -1415,10 +1555,10 @@ components:
               type: object
               description: object to store logo for overlay on video
               properties:
-                imageUrl:
+                imageId:
                   type: string
-                  format: url
-                  description: url to download the logo png image
+                  format: uuid
+                  description: Id of the logo png image
                 placement:
                   type: string
                   enum:
@@ -1433,6 +1573,26 @@ components:
                   type: integer
                   description: veritcal offset relative to placement in pixel
       required: [publishName, name, id, transcodingProfile, input, output]
+    Images:
+      type: object
+      required: [ url ] 
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          format: url
+        username:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+        labels:
+          type: array
+          items:
+            type: string
+            description: multiple labels to label the image
     EventTimes:
       type: object
       properties:
