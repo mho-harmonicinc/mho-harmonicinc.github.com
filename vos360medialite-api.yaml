@@ -200,6 +200,10 @@ paths:
           description: Forbidden   
         '404':
           description: Cloud Source Not Found
+        '422':
+          description: Unprocessable Entity e.g. Not at Online state
+        '424':
+          description: Failed to offline Cloud Source
       security:
         - vosio_auth:
             - write:vosio
@@ -230,6 +234,10 @@ paths:
           description: Forbidden   
         '404':
           description: Cloud Source Not Found
+        '422':
+          description: Unprocessable Entity e.g. Not at Offline state
+        '424':
+          description: Failed to online Cloud Source
       security:
         - vosio_auth:
             - write:vosio
