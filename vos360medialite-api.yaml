@@ -6,6 +6,7 @@ info:
 
     - live
     - origin-engine
+    - externalAssetStorage
     - fileTranscode
     - notification
     
@@ -24,6 +25,7 @@ servers:
 tags:
   - name: live
   - name: origin-engine
+  - name: externalAssetStorage
   - name: fileTranscode
   - name: notification
 paths:
@@ -249,11 +251,6 @@ paths:
         - live
       description: list all the images
       operationId: listImages
-      parameters:
-        - in: query
-          name: id
-          schema:
-            type: string
       responses:
         '200':
           description: Successful operation
@@ -305,12 +302,8 @@ paths:
           description: Unauthorized
         '403':
           description: Forbidden
-        '404':
-          description: Not Found
         '422':
           description: Unprocessable entity to create image
-        '424':
-          description: Failed to create image
       security:
         - vosio_auth:
             - write:vosio
@@ -345,12 +338,49 @@ paths:
           description: Forbidden
         '404':
           description: No image with specified Id
-        '424':
-          description: Failed to get specific image    
       security:
       - vosio_auth:
           - write:vosio
           - read:vosio
+    put:
+      summary: Update an image
+      tags:
+        - live
+      description: update an image
+      operationId: updateImage
+      parameters:
+        - name: id
+          in: path
+          description: Image Id
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Create a new image
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Images'
+      responses:
+        '201':
+          description: Image Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Images'
+        '400':
+          description: Failed to update Image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden  
+        '404':
+          description: Cannot find Image
+      security:
+      - vosio_auth:
+          - write:vosio
+          - read:vosio      
     delete:
       summary: Delete an image
       tags:
@@ -376,8 +406,6 @@ paths:
           description: Forbidden  
         '404':
           description: Cannot find Image
-        '424':
-          description: Failed to delete Image
       security:
       - vosio_auth:
           - write:vosio
@@ -927,13 +955,13 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
-  /origin-engine/v1/dynamicPackaging:
+  /externalAssetStorage/v1/storageAccounts:
     get:
       summary: Get the list of dynamic packaging config
       tags:
-        - origin-engine
+        - externalAssetStorage
       description: Dynamic Packaging is Package on the Fly (POTF) of multi-bitrate content to streaming formats.  It is tight to a storage account where mp4 or ismv files are located.  Each dynamic packaging configuration can have an account and packaging format/DRM configured.
-      operationId: listDynamicPackagingConfigs
+      operationId: listExternalAssetStorage
       parameters:
         - in: query
           name: id
@@ -941,21 +969,9 @@ paths:
             type: string
             format: uuid
         - in: query
-          name: name
+          name: accountName
           schema:
             type: string
-        - in: query
-          name: labels
-          schema:
-            type: string
-        - in: query
-          name: state
-          schema:
-            type: string
-            enum:
-            - Online
-            - Offline
-            - Error
       responses:
         '200':
           description: Successful operation
@@ -963,7 +979,7 @@ paths:
             application/json:
               schema:
                 type: array
-                description: list of dynamic packaging with status
+                description: list of storageAccounts
                 readOnly: true
                 items:
                   type: object
@@ -971,16 +987,9 @@ paths:
                     id: 
                       type: string
                       format: uuid
-                    name:
+                    accountName:
                       type: string
-                      example: College Football Events Archive
-                    state:
-                      type: string
-                      example: Online
-                      enum:
-                      - Online
-                      - Offline
-                      - Error
+                      example: devstoreaccount1
         '401':
           description: Unauthorized
         '403':
@@ -990,29 +999,26 @@ paths:
           - write:vosio
           - read:vosio
     post:
-      summary: Create dynamic packaging config
+      summary: Create storage account config
       tags:
-        - origin-engine
+        - externalAssetStorage
       description: Dynamic Packaging is Package on the Fly (POTF) of multi-bitrate content to streaming formats.  It is tight to a storage account where mp4 or ismv files are located.  Each dynamic packaging configuration can have an account and packaging format/DRM configured.
-      operationId: createDynamicPackagingConfigs
+      operationId: createExternalAssetStorageConfig
       requestBody:
-        description: Create a new dynamic packaging
+        description: Create a new storage account config
         content:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/DynamicPackaging'
-
-        required: true
+                - $ref: '#/components/schemas/ExternalAssetStorage'
       responses:
         '201':
-          description: Dynamic Packaging Created
+          description: Storage Config Created
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/VodDestinationUrls'    
+                  - $ref: '#/components/schemas/ExternalAssetStorage'
         '401':
           description: Unauthorized
         '403':
@@ -1023,30 +1029,29 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
-  /origin-engine/v1/dynamicPackaging/{id}:
+  /externalAssetStorage/v1/storageAccounts/{id}:
     get:
-      summary: Get dynamic packaging details
+      summary: Get storage account details
       tags:
-        - origin-engine
-      description: get dynamic packaging
-      operationId: getDynamicPackagingDetails
+        - externalAssetStorage
+      description: get storage acccount details
+      operationId: getExternalStorageAccountDetails
       parameters:
         - name: id
           in: path
-          description: Dynamic Packaging Id
+          description: Storage Account Id
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: Dynamic Packaging Details
+          description: Storage Account Details
           content:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/VodDestinationUrls'    
+                  - $ref: '#/components/schemas/ExternalAssetStorage'
         '401':
           description: Unauthorized
         '403':
@@ -1058,27 +1063,26 @@ paths:
             - write:vosio
             - read:vosio
     put:
-      summary: Update Dyanmic Packaging
+      summary: Update Storage Account
       tags:
-        - origin-engine
-      description: update Dynamic Packaging
-      operationId: updateDynamicPackaging
+        - externalAssetStorage
+      description: update Storage Account Config
+      operationId: updateExternalAssetStorageConfig
       parameters:
         - name: id
           in: path
-          description: Dynamic Packaging Id
+          description: Storage Account Id
           required: true
           schema:
             type: string
             format: uuid
       requestBody:
-        description: Update Dynamic Packaging
+        description: Update Storage Account Config
         content:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/DynamicPackaging'
-        required: true
+                - $ref: '#/components/schemas/ExternalAssetStorage'
       responses:
         '200':
           description: Dynamic Packaging Updated
@@ -1086,8 +1090,7 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/DynamicPackaging'
-                  - $ref: '#/components/schemas/VodDestinationUrls'    
+                  - $ref: '#/components/schemas/ExternalAssetStorage'
         '401':
           description: Unauthorized
         '403':
@@ -1099,22 +1102,22 @@ paths:
             - write:vosio
             - read:vosio
     delete:
-      summary: Delete a Dynamic Packaging
+      summary: Delete a Storage Account Config
       tags:
-        - origin-engine
-      description: delete a Dynamic Packaging
-      operationId: deleteDynamicPackaging
+        - externalAssetStorage
+      description: delete a storage account config
+      operationId: deleteExternalAssetStorageConfig
       parameters:
         - name: id
           in: path
-          description: Dynamic Packaging Id
+          description: Storage Account Id
           required: true
           schema:
             type: string
             format: uuid
       responses:
         '200':
-          description: Dynamic Packaging Deleted
+          description: Storage Account Config Deleted
         '401':
           description: Unauthorized
         '403':
@@ -1125,21 +1128,43 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
-  /origin-engine/v1/dynamicPackaging/{id}/offline:
-    put:
-      summary: Action to offline the Dynamic Packaging by id
+  /externalAssetStorage/v1/packagingProfile:
+    get:
+      summary: Show External Asset Storage Packaging Profile Config.  It applies to all Storage Accounts
       tags:
-        - origin-engine
-      description: offline the Dynamic Packaging
-      operationId: offlineDynamicPackaging
-      parameters:
-        - name: id
-          in: path
-          description: Dynamic Packaging Id
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - externalAssetStorage
+      description: show packaging profile config
+      operationId:
+        getExternalAssetStoragePackagingProfileConfig
+      responses:
+        '200':
+          description: External Asset Storage Packaging Profile Config
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PackageProfile'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+      security:
+        - vosio_auth:
+            - write:vosio
+            - read:vosio     
+    put:
+      summary: Update External Asset Storage Packaging Profile Config
+      tags:
+        - externalAssetStorage
+      description: update packaging profile config
+      operationId: updateExternalAssetStoragePackagingProfileConfig
+      requestBody:
+        description: Update Storage Account Config
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/PackageProfile'
       responses:
         '200':
           description: Dynamic Packaging Offline Success
@@ -1151,36 +1176,6 @@ paths:
           description: Invalid input
         '422':
           description: Unprocessable Entity.  e.g. Not at Online state
-      security:
-        - vosio_auth:
-            - write:vosio
-            - read:vosio    
-  /origin-engine/v1/dynamicPackaging/{id}/online:
-    put:
-      summary: Action to online the Dynamic Packaging by id
-      tags:
-        - origin-engine
-      description: online the Dynamic Packaging
-      operationId: onlineDynamicPackaging
-      parameters:
-        - name: id
-          in: path
-          description: Dynamic Packaging Id
-          required: true
-          schema:
-            type: string
-            format: uuid
-      responses:
-        '200':
-          description: Dynamic Packaging Online Success
-        '401':
-          description: Unauthorized
-        '403':
-          description: Forbidden   
-        '405':
-          description: Invalid input
-        '422':
-          description: Unprocessable Entity.  e.g. Not at Offline state
       security:
         - vosio_auth:
             - write:vosio
@@ -1449,6 +1444,13 @@ components:
             imageId:
               type: string
               format: uuid
+        liveSlate:
+          type: object
+          description: slate image to cover the screen when event is live.  Use action to trigger slate on/off.  (insertSlate and removeSlate).
+          properties:
+            imageId:
+              type: string
+              format: uuid
         packagingProfile:
           type: string
           example: Standard
@@ -1457,10 +1459,10 @@ components:
           - Premium
         publishName:
           type: string
-          description: Name used in the URLs to identify the event.  This needs to be unique and no space and special characters
+          description: Name used in the URLs to identify the event.  This needs to be unique and no space and special characters.  If not specified, generated id will be used in URL.
           example: footballFinal2023
           minLength: 1
-          maxLength: 30
+          maxLength: 50
           pattern: '([a-z]|[A-Z]|[0-9])+'
         output:
           type: array
@@ -1552,13 +1554,6 @@ components:
           type: object
           description: addon for optional features
           properties:
-            liveSlateAddon:
-              type: object
-              description: slate image to cover the screen when event is live.  Use action to trigger slate on/off
-              properties:
-                imageUrl:
-                  type: string
-                  format: url
             logoAddon:
               type: object
               description: object to store logo for overlay on video
@@ -1580,7 +1575,7 @@ components:
                 verticalOffset:
                   type: integer
                   description: veritcal offset relative to placement in pixel
-      required: [publishName, name, id, transcodingProfile, input, output]
+      required: [name, id, transcodingProfile, input, output]
     Images:
       type: object
       required: [ url ] 
@@ -1795,7 +1790,7 @@ components:
           minimum: 0
           maximum: 100
           readOnly: true
-    DynamicPackaging:
+    ExternalAssetStorage:
       type: object
       properties:
         id: 
@@ -1803,81 +1798,43 @@ components:
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
           readOnly: true
-        name:
+        accountName:
           type: string
-          description: simple name of the Dynamic Packaging
-          example: All College Football Event Archive
-        labels:
-          type: array
-          items:
-            type: string
-            description: multiple labels to label the dynamic packaging
-        state:
+          example: devstoreaccount1
+        accountKey:
           type: string
-          description: Dynamic Packaging State
-          example: Online
-          readOnly: true
-          enum:
-            - Offline
-            - Online
-            - Error
-        storage:
-          description: storage account information
+          writeOnly: true
+          example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
+        endpoint:
+          type: string
+          example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
+        type:
+          type: string
+          enum: 
+          - block
+          - file
+      required: [accountName, accountKey, endpoint]
+    PackageProfile:
+      description: Dynamic Packaging Output format/drm
+      type: object
+      properties:
+        cacheMaxAge: 
+          description: default to 3 days if not provided
+          type: integer
+          example: 259200
+        drmSettings:
           type: object
           properties:
-            publishName:
+            enableDrm:
+              type: boolean
+            drmSystemId:
               type: string
-              example: collegefootballprodstorage
-              minLength: 1
-              maxLength: 30
-              pattern: '([a-z]|[A-Z]|[0-9])+'
-            id:
+            resourceId:
               type: string
-              format: uuid
-              readOnly: true
-            accountName:
-              type: string
-              example: devstoreaccount1
-            accountKey:
-              type: string
-              example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
-            objectStorageEndpoint:
-              type: string
-              example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
-        outputs:
-          description: Dynamic Packaging Output format/drm
-          type: array
-          items: 
-            type: object
-            properties:
-              destinationOutputId:
-                type: string
-                format: uuid
-                readOnly: true
-              encryptionMethod:
-                type: string
-                example: CENC 
-                enum:
-                - Clear
-                - AES
-                - Fairplay
-                - CENC
-              package:
-                type: string
-                example: cmaf-dash
-                enum:
-                  - cmaf-hls
-                  - cmaf-dash
-                  - hls-ts
-                  - dash
-                  - hss
-              embeddedSubtitle:
-                type: string
-                example: webvtt
-                enum:
-                  - webvtt
-                  - imsc1
-            required: [package,encryptionMethod]
+          required: [enableDrm]
+        vodProfileId:
+          type: string
+          description: default if not provided
     FileTranscodeJob:
       type: object
       properties:
