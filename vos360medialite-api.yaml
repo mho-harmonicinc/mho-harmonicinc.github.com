@@ -1531,8 +1531,8 @@ components:
                 type: string
                 example: cmaf-dash
                 enum:
-                  - cmaf-hls
-                  - cmaf-dash
+                  - hls-cmaf
+                  - dash-cmaf
                   - hls-ts
                   - dash
                   - ll-hls
@@ -1867,18 +1867,34 @@ components:
           type: integer
           example: 259200
         drmSettings:
-          type: object
-          properties:
-            enableDrm:
-              type: boolean
-            drmSystemId:
-              type: string
-            resourceId:
-              type: string
-          required: [enableDrm]
-        vodProfileId:
-          type: string
-          description: default if not provided
+          type: array
+          items:
+            type: object
+            properties:
+              packageName:
+                type: string
+                example: dash
+                enum:
+                - hls-ts
+                - hls-cmaf
+                - dash
+                - dash-cmaf
+                - hss
+              enableDrm:
+                type: boolean
+              encryptionMethod:
+                type: string
+                example: CENC
+                enum:
+                - Clear
+                - AES
+                - Fairplay
+                - CENC
+              drmSystemId:
+                type: string
+              resourceId:
+                type: string
+            required: [packageName,enableDrm]
     FileTranscodeJob:
       type: object
       properties:
