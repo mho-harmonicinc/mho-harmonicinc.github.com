@@ -145,6 +145,50 @@ paths:
       - vosio_auth:
           - write:vosio
           - read:vosio
+    put:
+      summary: Update a Cloud Source
+      tags:
+        - live
+      description: update a cloud source
+      operationId: updateCloudSource
+      parameters:
+      - name: id
+        in: path
+        description: Cloud Source Id
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        description: Update an existing Cloud Source
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloudSourceUpdate'
+        required: true
+      responses:
+        '201':
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudSource'
+        '400':
+          description: Failed to update Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '422':
+          description: Unprocessable entity to update Cloud Source 
+        '424':
+          description: Failed to update Cloud Source because dependency issue
+      security:
+        - vosio_auth:
+            - write:vosio
+            - read:vosio
     delete:
       summary: Delete a Cloud Source
       tags:
@@ -1986,6 +2030,11 @@ components:
           type: integer
           maximum: 20
           example: 0
+    CloudSourceUpdate:
+      type: object
+      properties:
+        name:
+          type: string
     CloudSource:
       type: object
       properties:
