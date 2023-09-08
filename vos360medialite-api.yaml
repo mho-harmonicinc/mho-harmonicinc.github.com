@@ -1172,14 +1172,14 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
-  /externalAssetStorage/v1/packagingProfile:
+  /externalAssetStorage/v1/packagingProfileAdvanced:
     get:
       summary: Show External Asset Storage Packaging Profile Config.  It applies to all Storage Accounts
       tags:
         - externalAssetStorage
       description: show packaging profile config
       operationId:
-        getExternalAssetStoragePackagingProfileConfig
+        getExternalAssetStoragePackagingProfileConfig360
       responses:
         '200':
           description: External Asset Storage Packaging Profile Config
@@ -1187,7 +1187,59 @@ paths:
             application/json:
               schema:
                 allOf:
-                  - $ref: '#/components/schemas/PackageProfile'
+                  - $ref: '#/components/schemas/PackageProfile360'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+      security:
+        - vosio_auth:
+            - write:vos360
+            - read:vos360     
+    put:
+      summary: Update External Asset Storage Packaging Profile Config
+      tags:
+        - externalAssetStorage
+      description: update packaging profile config
+      operationId: updateExternalAssetStoragePackagingProfileConfig360
+      requestBody:
+        description: Update Storage Account Config
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/PackageProfile360'
+      responses:
+        '200':
+          description: Dynamic Packaging Offline Success
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+        '422':
+          description: Unprocessable Entity.  e.g. Not at Online state
+      security:
+        - vosio_auth:
+            - write:vos360
+            - read:vos360    
+  /externalAssetStorage/v1/packagingProfile:
+    get:
+      summary: Show External Asset Storage Packaging Profile Config.  It applies to all Storage Accounts
+      tags:
+        - externalAssetStorage
+      description: show packaging profile config
+      operationId:
+        getExternalAssetStoragePackagingProfileConfigIo
+      responses:
+        '200':
+          description: External Asset Storage Packaging Profile Config
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PackageProfileIo'
         '401':
           description: Unauthorized
         '403':
@@ -1201,14 +1253,14 @@ paths:
       tags:
         - externalAssetStorage
       description: update packaging profile config
-      operationId: updateExternalAssetStoragePackagingProfileConfig
+      operationId: updateExternalAssetStoragePackagingProfileConfigIo
       requestBody:
         description: Update Storage Account Config
         content:
           application/json:
             schema:
               allOf:
-                - $ref: '#/components/schemas/PackageProfile'
+                - $ref: '#/components/schemas/PackageProfileIo'
       responses:
         '200':
           description: Dynamic Packaging Offline Success
@@ -1223,7 +1275,7 @@ paths:
       security:
         - vosio_auth:
             - write:vosio
-            - read:vosio    
+            - read:vosio   
   /fileTranscode/v1/jobs:
     get:
       summary: Get the list of jobs
@@ -1858,7 +1910,55 @@ components:
           - block
           - file
       required: [accountName, accountKey, endpoint]
-    PackageProfile:
+    PackageProfile360:
+      description: Dynamic Packaging Output format/drm
+      type: object
+      properties:
+        cacheMaxAge: 
+          description: default to 3 days if not provided
+          type: integer
+          example: 259200
+        drmSettings:
+          type: object
+          properties:
+            perPackageDrmSystemIdList:
+              type: array
+              items:
+                type: object
+                properties:
+                  packageName:
+                    type: string
+                    example: dash
+                    enum:
+                    - hls-ts
+                    - hls-cmaf
+                    - dash
+                    - dash-cmaf
+                    - hss
+                  drmSystemId:
+                    type: string
+              required: [packageName,drmSystemId]
+            perPackageResourceIdList:
+              type: array
+              items:
+                type: object
+                properties:
+                  packageName:
+                    type: string
+                    example: dash
+                    enum:
+                    - hls-ts
+                    - hls-cmaf
+                    - dash
+                    - dash-cmaf
+                    - hss
+                  resourceId:
+                    type: string
+              required: [packageName,resourceId]
+        destinationProfileId:
+          type: string
+          format: uuid
+    PackageProfileIo:
       description: Dynamic Packaging Output format/drm
       type: object
       properties:
@@ -1880,21 +1980,16 @@ components:
                 - dash
                 - dash-cmaf
                 - hss
-              enableDrm:
-                type: boolean
               encryptionMethod:
                 type: string
                 example: CENC
+                default: Clear
                 enum:
                 - Clear
                 - AES
                 - Fairplay
                 - CENC
-              drmSystemId:
-                type: string
-              resourceId:
-                type: string
-            required: [packageName,enableDrm]
+            required: [packageName,encryptionMethod]
     FileTranscodeJob:
       type: object
       properties:
