@@ -948,13 +948,13 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
-  /origin-engine/v1/streamingEndpoint:
+  /origin-engine/v1/streamingCapacity:
     get:
-      summary: Get origin streaming endpoint related to streaming units reserved.  The streaming units are shared with all Live Events and Dynamic Packaging outputs
+      summary: Get origin streaming capacity related to streaming units reserved.  The streaming units are shared with all Live Events and Dynamic Packaging outputs
       tags:
         - origin-engine
-      description: returns the streaming capacity reservation
-      operationId: getStreamingEndpointReservedUnits
+      description: returns the streaming capacity consumption
+      operationId: getStreamingCapacityStreamingUnits
       responses:
         '200':
           description: successful operation
@@ -971,7 +971,7 @@ paths:
           - write:vosio
           - read:vosio
     put:
-      summary: Update origin steraming endpoint streaming units reserved
+      summary: Update origin steraming capacity streaming units reserved
       tags:
         - origin-engine
       description: returns the Streaming Unit settings
@@ -1026,14 +1026,8 @@ paths:
                 description: list of storageAccounts
                 readOnly: true
                 items:
-                  type: object
-                  properties:
-                    id: 
-                      type: string
-                      format: uuid
-                    accountName:
-                      type: string
-                      example: devstoreaccount1
+                  allOf:
+                  - $ref: '#/components/schemas/ExternalAssetStorage'
         '401':
           description: Unauthorized
         '403':
@@ -1172,6 +1166,40 @@ paths:
         - vosio_auth:
             - write:vosio
             - read:vosio
+  /externalAssetStorage/v1/storageAccounts/{id}/playbackUrl:
+    get:
+      summary: Get playback URL
+      tags:
+        - externalAssetStorage
+      description: get playback URL
+      operationId: getPlaybackUrl
+      parameters:
+        - name: id
+          in: path
+          description: Playback URL for the storage account
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Storage Account Details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/VodDestinationUrls'
+                readOnly: true  
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden   
+        '405':
+          description: Invalid input
+      security:
+        - vosio_auth:
+            - write:vosio
+            - read:vosio
   /externalAssetStorage/v1/packagingProfileAdvanced:
     get:
       summary: Show External Asset Storage Packaging Profile Config.  It applies to all Storage Accounts
@@ -1193,7 +1221,7 @@ paths:
         '403':
           description: Forbidden   
       security:
-        - vosio_auth:
+        - vos360_auth:
             - write:vos360
             - read:vos360     
     put:
@@ -1221,7 +1249,7 @@ paths:
         '422':
           description: Unprocessable Entity.  e.g. Not at Online state
       security:
-        - vosio_auth:
+        - vos360_auth:
             - write:vos360
             - read:vos360    
   /externalAssetStorage/v1/packagingProfile:
@@ -1800,22 +1828,27 @@ components:
                   type: string
                   format: url
                   description: CDN url for cmaf dash output
+                  example: https://<domain-name>/DynamicPackaging_<storage-account-id>/dash-cmaf/<asset-id>/<asset-name>/manifest.mpd
                 cmafHlsUrl:
                   type: string
                   format: url
                   description: CDN url for cmaf hls output
+                  example: https://<domain-name>/DynamicPackaging_<storage-account-id>/hls-cmaf/<asset-id>/<asset-name>/manifest.mpd
                 hlsTsUrl:
                   type: string
                   format: url
                   description: CDN url for hls ts output
+                  example: https://<domain-name>/DynamicPackaging_<storage-account-id>/hls-sts/<asset-id>/<asset-name>/manifest.mpd
                 dashUrl:
                   type: string
                   format: url
                   description: CDN url for dash output
+                  example: https://<domain-name>/DynamicPackaging_<storage-account-id>/dash/<asset-id>/<asset-name>/manifest.mpd
                 ssUrl:
                   type: string
                   format: url
                   description: CDN url for http smooth streaming output
+                  example: https://<domain-name>/DynamicPackaging_<storage-account-id>/hss/<asset-id>/<asset-name>/manifest.mpd
             originUrls:
               type: object
               description: list of Origin URL endpoints
@@ -1893,22 +1926,9 @@ components:
           type: string
           format: uuid
           example: 34fd01fc-fee6-11ed-be56-0242ac120002
-          readOnly: true
-        accountName:
+        connectionstring:
           type: string
-          example: devstoreaccount1
-        accountKey:
-          type: string
-          writeOnly: true
-          example: Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==;
-        endpoint:
-          type: string
-          example: https://collegesports-events.blob.core.windows.net/devstoreaccount1
-        type:
-          type: string
-          enum: 
-          - block
-          - file
+          example: DefaultEndpointsProtocol=https;AccountName=pokerploams2;AccountKey=<base64 string>;EndpointSuffix=core.windows.net
       required: [accountName, accountKey, endpoint]
     PackageProfile360:
       description: Dynamic Packaging Output format/drm
