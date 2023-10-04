@@ -1589,6 +1589,13 @@ components:
             imageId:
               type: string
               format: uuid
+            state:
+              type: string
+              example: off
+              enum:
+               - on
+               - off
+              readOnly: true
         packagingProfile:
           type: string
           example: Standard
@@ -2295,6 +2302,10 @@ components:
                   type: integer
                   example: 0
                   readOnly: true
+        monitorUrl:
+          type: string
+          format: url
+          example: srt://ingress-94e43b8b1019480055bea889.lrs-preprod.vos360.video:7088?passphrase=bibv0i7pwmrwx9exrsmnpuup
         version: 
           type: string
       required: [name]
