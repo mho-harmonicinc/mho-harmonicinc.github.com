@@ -1,4 +1,4 @@
-swagger: '2.0'
+openapi: 3.0.3
 info:
   description: VOS REST APIs
   version: '1.0'
