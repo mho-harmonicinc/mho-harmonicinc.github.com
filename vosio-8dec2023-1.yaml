@@ -1,0 +1,2434 @@
+swagger: '2.0'
+info:
+  description: VOS REST APIs
+  version: '1.0'
+  title: VOS
+  license:
+    name: Harmonic Inc.
+    url: http://harmonicinc.com/
+paths:
+  /drm/v1/drmtoday/customer_right_tokens:
+    get:
+      tags:
+        - DRM Today
+      summary: Get list of configured customer right tokens for merchant
+      description: Get list of configured customer right tokens for merchant.
+      operationId: getCustomerRightsTokenListUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - DRM Today
+      summary: Add customer rights token for merchant
+      description: Add customer rights token for merchant.
+      operationId: addCustomerRightsTokenUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: customerRightsTokenConfig
+          description: customerRightsTokenConfig
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/drmtoday/customer_right_tokens/{id}:
+    get:
+      tags:
+        - DRM Today
+      summary: Get customer right token by its ID for merchant
+      description: Get customer right token by its ID for merchant.
+      operationId: getCustomerRightsTokenUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of CRT
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - DRM Today
+      summary: Update custom rights token by its ID for merchant
+      description: Update custom rights token by its ID for merchant.
+      operationId: updateCustomerRightsTokenUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of CRT
+          required: true
+          type: string
+        - in: body
+          name: customerRightsTokenConfig
+          description: customerRightsTokenConfig
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - DRM Today
+      summary: Delete custom rights token by its ID for merchant
+      description: Delete custom rights token by its ID for merchant.
+      operationId: deleteCustomerRightsTokenUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of CRT
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: boolean
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /drm/v1/drmtoday/fairplay_certificate:
+    post:
+      tags:
+        - DRM Today
+      summary: Configure Fairplay certificate for merchant
+      description: Configure Fairplay certificate for merchant.
+      operationId: addFairplayCertificateUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: fairplayCertificateConfig
+          description: fairplayCertificateConfig
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.FairplayCertificateConfig'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.FairplayCertificateStatus'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/drmtoday/fairplay_certificate/status:
+    get:
+      tags:
+        - DRM Today
+      summary: Get Fairplay certificate status for merchant
+      description: Get Fairplay certificate status for merchant.
+      operationId: getFairplayCertificateStatusUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.FairplayCertificateStatus'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/drmtoday/merchant_metadata:
+    get:
+      tags:
+        - DRM Today
+      summary: Get merchant metadata
+      description: Get merchant metadata
+      operationId: getMerchantMetadataUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.MerchantMetadata'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/drmtoday/shared_secrets:
+    get:
+      tags:
+        - DRM Today
+      summary: Get list of configured shared secrets for merchant
+      description: Get list of configured shared secrets for merchant.
+      operationId: getSharedSecretListUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.SharedSecretResponseConfig'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Shared secret not found
+    post:
+      tags:
+        - DRM Today
+      summary: Add shared secret for merchant
+      description: Add shared secret for merchant.
+      operationId: addSharedSecretUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: sharedSecretConfig
+          description: sharedSecretConfig
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.SharedSecretConfig'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.SharedSecretResponseConfig'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/drmtoday/shared_secrets/{id}:
+    get:
+      tags:
+        - DRM Today
+      summary: Get configured shared secret by its ID for merchant
+      description: Get configured shared secret by its ID for merchant
+      operationId: getSharedSecretUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of shared secret
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.SharedSecretResponseConfig'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Shared secret not found
+    delete:
+      tags:
+        - DRM Today
+      summary: Delete shared secret by its ID for merchant
+      description: Delete shared secret by its ID for merchant.
+      operationId: deleteSharedSecretUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of shared secret
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: boolean
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /drm/v1/drmtoday/shared_secrets/{id}/{flag}:
+    put:
+      tags:
+        - DRM Today
+      summary: Enable or disable shared secret by its ID for merchant
+      description: Enable or disable shared secret by its ID for merchant.
+      operationId: updateSharedSecretFlagUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of shared secret
+          required: true
+          type: string
+        - name: flag
+          in: path
+          description: Boolean flag - enable or disable shared secret
+          required: true
+          type: boolean
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.drmtoday.model.response.SharedSecretResponseConfig'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/profiles:
+    get:
+      tags:
+        - DRM
+      summary: Get list of DRM profiles
+      description: Get list of DRM profiles
+      operationId: getDrmProfilesUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - DRM
+      summary: Add new DRM profile
+      description: Add new DRM profile
+      operationId: addDrmProfileUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: drmProfile
+          description: drmProfile
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /drm/v1/profiles/{id}:
+    get:
+      tags:
+        - DRM
+      summary: Get DRM profile by ID
+      description: Get DRM profile by ID
+      operationId: getDrmProfileUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of DRM profile
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - DRM
+      summary: Update DRM profile by ID
+      description: Update DRM profile by ID
+      operationId: updateDrmProfileUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of DRM profile
+          required: true
+          type: string
+        - in: body
+          name: drmProfile
+          description: drmProfile
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.DrmProfile'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - DRM
+      summary: Delete DRM profile by ID
+      description: Delete DRM profile by ID
+      operationId: deleteDrmProfileUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Unique identifier of DRM profile
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /external-asset-potf/v1/packaging_profile_basic:
+    get:
+      tags:
+        - External Asset POTF
+      summary: Get packaging profile
+      description: Get packaging profile
+      operationId: getPackagingProfileBasicUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.profile.PackagingProfileBasic'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+    put:
+      tags:
+        - External Asset POTF
+      summary: Update packaging profile
+      description: Update packaging profile
+      operationId: setPackagingProfileBasicUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: profile
+          description: Packaging Profile
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.profile.PackagingProfileBasic'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+  /external-asset-potf/v1/storage_account:
+    get:
+      tags:
+        - External Asset POTF
+      summary: List all storage accounts
+      description: List all storage accounts
+      operationId: listStorageAccountsUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+    post:
+      tags:
+        - External Asset POTF
+      summary: Create a storage account
+      description: Create a storage account
+      operationId: createStorageAccountUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: storageAccount
+          description: storageAccount
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+  /external-asset-potf/v1/storage_account/{id}:
+    get:
+      tags:
+        - External Asset POTF
+      summary: Get a storage account
+      description: Get a storage account
+      operationId: getStorageAccountUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: Storage account ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+    put:
+      tags:
+        - External Asset POTF
+      summary: Update an existing storage account
+      description: Update an existing storage account
+      operationId: updateStorageAccountUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: Storage account ID
+          required: true
+          type: string
+        - in: body
+          name: storageAccount
+          description: Storage account info
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount'
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+    delete:
+      tags:
+        - External Asset POTF
+      summary: Delete a storage account
+      description: Delete a storage account
+      operationId: deleteStorageAccountUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: Storage account ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '500':
+          description: Internal Error
+  /external-asset-potf/v1/storage_account/{id}/egress_url_format:
+    get:
+      tags:
+        - External Asset POTF
+      summary: Get a storage account
+      description: Get a storage account
+      operationId: getStorageAccountEgressUrlFormatUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: Storage account ID
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+  /live/v1/cloudsources:
+    get:
+      tags:
+        - Live CloudSource
+      summary: List all the Cloud Sources
+      description: List all the Cloud Sources
+      operationId: getCloudSourcesUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: query
+          description: Substring matching Cloud Source name
+          required: false
+          type: string
+        - name: state
+          in: query
+          description: Cloud Source state to filter by state
+          required: false
+          type: string
+          enum:
+            - ONLINE
+            - OFFLINE
+            - UNKNOWN
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '400':
+          description: Failed to return list of Cloud Sources
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '424':
+          description: Failed to return list of Cloud Sources because of failed dependency
+    post:
+      tags:
+        - Live CloudSource
+      summary: Create a Cloud Source
+      description: Create a new Cloud Source
+      operationId: createCloudSourceUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: livePipeCreateRequest
+          description: Cloud Source model
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipeCreateRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '400':
+          description: Failed to create Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '424':
+          description: Failed to create Cloud Source because of failed dependency
+  /live/v1/cloudsources/{id}:
+    get:
+      tags:
+        - Live CloudSource
+      summary: Get Cloud Source by Id
+      description: Get Cloud Source by Id
+      operationId: getCloudSourceUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Cloud Source Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '400':
+          description: Failed to return Cloud Source, invalid Id
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified Id
+        '424':
+          description: Failed to get specific Cloud Source because of failed dependency
+    put:
+      tags:
+        - Live CloudSource
+      summary: Update Cloud Source
+      description: Update Cloud Source
+      operationId: updateCloudSourceUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateRequest
+          description: Cloud Source update model
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipeUpdateRequest'
+        - name: id
+          in: path
+          description: Cloud Source id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Updated
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '201':
+          description: Created
+        '400':
+          description: Failed to update Cloud Source
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '424':
+          description: Failed to update Cloud Source because of failed dependency
+    delete:
+      tags:
+        - Live CloudSource
+      summary: Delete a Cloud Source
+      description: Delete a Cloud Source
+      operationId: deleteCloudSourceUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Cloud Source id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Cloud Source Deleted
+        '204':
+          description: No Content
+        '400':
+          description: Failed to delete Cloud Source, invalid Id
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified Id
+        '424':
+          description: Failed to delete Cloud Source because of failed dependency
+  /live/v1/cloudsources/{id}/offline:
+    put:
+      tags:
+        - Live CloudSource
+      summary: Update Cloud Source state by Id
+      description: Offline Cloud Source by Id
+      operationId: offlineCloudSourceUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Cloud Source Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '201':
+          description: Created
+        '400':
+          description: Failed to offline Cloud Source, invalid Id
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified Id
+        '422':
+          description: Unprocessable entity. Not at Online state
+        '424':
+          description: Failed to online Cloud Source because of failed dependency
+  /live/v1/cloudsources/{id}/online:
+    put:
+      tags:
+        - Live CloudSource
+      summary: Update Cloud Source state by Id
+      description: Online Cloud Source by Id
+      operationId: onlineCloudSourceUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Cloud Source Id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe'
+        '201':
+          description: Created
+        '400':
+          description: Failed to online Cloud Source, invalid Id
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No cloud source with specified Id
+        '422':
+          description: Unprocessable entity. Not at Offline state
+        '424':
+          description: Failed to online Cloud Source because of failed dependency
+  /live/v1/events:
+    get:
+      tags:
+        - Live Event
+      summary: List all the live Events
+      description: list all the live Events.
+      operationId: getLiveEventsUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: query
+          description: id
+          required: false
+          type: string
+        - name: name
+          in: query
+          description: name
+          required: false
+          type: string
+        - name: labels
+          in: query
+          description: labels
+          required: false
+          type: string
+        - name: state
+          in: query
+          description: state
+          required: false
+          type: string
+          enum:
+            - OFFLINE
+            - ALLOCATING
+            - PREVIEW
+            - ERROR
+            - LIVE
+            - FINISHED
+      responses:
+        '200':
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventDetails'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Live Event
+      summary: Create a live Event
+      description: create a live Event
+      operationId: addLiveEventUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: event
+          description: event
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventCreateRequest'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /live/v1/events/{id}:
+    get:
+      tags:
+        - Live Event
+      summary: Get a live Event
+      description: get a live Event details
+      operationId: getLiveEventUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEvent'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - Live Event
+      summary: Update a live Event
+      description: update a live Event
+      operationId: updateLiveEventUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+        - in: body
+          name: event
+          description: event
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventUpdateRequest'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEvent'
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - Live Event
+      summary: Delete a live Event
+      description: delete a live Event
+      operationId: deleteLiveEventUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+  /live/v1/events/{id}/end:
+    put:
+      tags:
+        - Live Event
+      summary: End live event with id
+      description: Action to end the live event with id
+      operationId: endUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Live Event id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: End live event successful
+        '201':
+          description: Created
+        '400':
+          description: Failed to end live event
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/events/{id}/goLive:
+    put:
+      tags:
+        - Live Event
+      summary: Go live event with id
+      description: Action to goLive the live event with id
+      operationId: goLiveUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Live Event id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Go live event successful
+        '201':
+          description: Created
+        '400':
+          description: Failed to go live event
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/events/{id}/insertSlate:
+    put:
+      tags:
+        - Live Event
+      summary: Insert slate
+      description: Insert Slate to live event with id
+      operationId: insertSlateUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Live event insert slate success
+        '201':
+          description: Created
+        '400':
+          description: Failed to insert slate
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/events/{id}/offline:
+    put:
+      tags:
+        - Live Event
+      summary: Offline live event with id
+      description: Action to offline the live event with id
+      operationId: offlineUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Live Event id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Offline live event successful
+        '201':
+          description: Created
+        '400':
+          description: Failed to offline live event
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/events/{id}/preview:
+    put:
+      tags:
+        - Live Event
+      summary: Preview live event with id
+      description: Action to preview the live event with id
+      operationId: previewUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Live Event id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Preview live event successful
+        '201':
+          description: Created
+        '400':
+          description: Failed to preview live event
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/events/{id}/removeSlate:
+    put:
+      tags:
+        - Live Event
+      summary: Remove slate
+      description: Remove Slate from live event with id
+      operationId: removeSlateUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Live event remove slate success
+        '201':
+          description: Created
+        '400':
+          description: Failed to remove slate
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: No live event with specified Id
+  /live/v1/images:
+    get:
+      tags:
+        - Live Image
+      summary: List all the images
+      description: List all the images
+      operationId: getImagesUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        '400':
+          description: Failed to return list of Images
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Live Image
+      summary: Create a new image
+      description: Create a new image
+      operationId: addImageUsingPOST_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: image
+          description: Image model
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        '400':
+          description: Failed to create a new image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+  /live/v1/images/{id}:
+    get:
+      tags:
+        - Live Image
+      summary: Get image by id
+      description: Get image by id
+      operationId: getImageUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Image id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        '400':
+          description: Failed to return image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    put:
+      tags:
+        - Live Image
+      summary: Update an image
+      description: Update an image
+      operationId: updateImageUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: image
+          description: Image model
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        - name: id
+          in: path
+          description: Image id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Updated
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.configure.model.Image'
+        '201':
+          description: Created
+        '400':
+          description: Failed to update an image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      tags:
+        - Live Image
+      summary: Delete an image
+      description: Delete an image
+      operationId: deleteImageUsingDELETE_7
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: Image id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+        '204':
+          description: No Content
+        '400':
+          description: Failed to delete image
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Cannot find image
+  /live/v1/images/{id}/savedImage:
+    get:
+      tags:
+        - Live Image
+      summary: Get image by id
+      description: Get saved image by id
+      operationId: getSavedImageUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - image/png
+      parameters:
+        - name: id
+          in: path
+          description: Image id
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Successful operation
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Cannot find saved image
+  /origin-engine/v1/status:
+    get:
+      tags:
+        - OriginEngine
+      summary: Get origin engine status
+      description: Get status and health metrics of origin engine.
+      operationId: getStatusUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.rest.OriginEngineStatus'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+  /origin-engine/v1/streaming_endpoint:
+    get:
+      tags:
+        - OriginEngine
+      summary: Get streaming endpoint config
+      description: Get streaming endpoint config.
+      operationId: getStreamingEndpointConfigUsingGET_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.streamingendpoint.StreamingEndpointConfig'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+    put:
+      tags:
+        - OriginEngine
+      summary: Set streaming endpoint config
+      description: Set streaming endpoint config.
+      operationId: setStreamingEndpointConfigUsingPUT_7
+      consumes:
+        - application/json
+      produces:
+        - '*/*'
+      parameters:
+        - in: body
+          name: config
+          description: Streaming endpoint config
+          required: true
+          schema:
+            $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.streamingendpoint.StreamingEndpointConfig'
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Error
+definitions:
+  com.harmonicinc.vos.drm.rest.drmtoday.model.response.FairplayCertificateStatus:
+    properties:
+      configured:
+        type: boolean
+    name: FairplayCertificateStatus
+  com.harmonicinc.vos.app.unifiedoriginengine.rest.OriginEngineStatus$StorageStatus:
+    properties:
+      lengthInHours:
+        type: number
+        format: double
+        description: Corresponding media length of stored media
+      sizeInGiB:
+        type: number
+        format: double
+        description: Amount of storage used for stored media
+    name: StorageStatus
+  com.harmonicinc.vos.app.saas.live.model.destination.PlaybackUrl:
+    properties:
+      cmafDashUrl:
+        type: string
+        description: playback URL for the live event in DASH CMAF format
+        readOnly: true
+      cmafHlsUrl:
+        type: string
+        description: playback URL for the live event in HLS CMAF format
+        readOnly: true
+      dashLlUrl:
+        type: string
+        description: playback URL for the live event in Low Latency DASH format
+        readOnly: true
+      dashUrl:
+        type: string
+        description: playback URL for the live event in DASH format
+        readOnly: true
+      hlsFmp4Url:
+        type: string
+        description: playback URL for the live event in HLS fMP4 format
+        readOnly: true
+      hlsTsUrl:
+        type: string
+        description: playback URL for the live event in HLS TS format
+        readOnly: true
+      llHlsUrl:
+        type: string
+        description: playback URL for the live event in low latency HLS format
+        readOnly: true
+      ssUrl:
+        type: string
+        description: playback URL for the live event in Smooth Streaming format
+        readOnly: true
+    name: PlaybackUrl
+  com.harmonicinc.vos.drm.rest.drmtoday.model.SharedSecretConfig:
+    properties:
+      enabled:
+        type: boolean
+      name:
+        type: string
+      secret:
+        type: string
+    name: SharedSecretConfig
+  com.harmonicinc.vos.syndicate.cloud.hms.model.pipe.LrsIngress:
+    properties:
+      cryptoSetting:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.CryptoSetting'
+      customUrl:
+        type: string
+        description: custom URL with DNS that resolves to the LRS Cloud Source host.  The custom URL DNS is a customer configured CNAME record.  This field serves as a place to record the DNS mapping.
+      platform:
+        type: string
+        description: cloud platform is one of AWS, Azure and GCP
+      privateUrl:
+        type: string
+        description: URL with host of DNS name that resolves to the private IP address of the Cloud Source.  This is useful if VPC peering is used.
+      protocol:
+        type: string
+        description: Cloud Source input protocol configured.  One of RTMP, SRT, RIST
+      region:
+        type: string
+        description: cloud region where the Cloud Source resides
+      streamCount:
+        type: integer
+        format: int32
+        description: the number of streams configured for this Cloud Source. This is used for multi-bitrate input where several bitrate profiles are received by a single Cloud Source, each with its own stream key (RTMP) or stream id (SRT)
+      url:
+        type: string
+        description: the Cloud Source endpoint URL where source can be published to
+    name: LrsIngress
+  com.harmonicinc.externalassetpotf.model.rest.profile.PackagingProperties:
+    required:
+      - packageName
+    properties:
+      commonEncryptionScheme:
+        type: string
+        description: Non-null value to override the value in predefined destination profile - Specify the common encryption scheme.
+        enum:
+          - CENC_CBCS
+          - CENC_CENC
+      encryptionMethod:
+        type: string
+        description: Non-null value to override the value in predefined destination profile - Specify the encryption method to used when integrate with DRM.
+        enum:
+          - e_CLEAR
+          - e_COMMON_ENCRYPTION
+          - e_HLS_AES
+          - e_FAIRPLAY
+          - e_PLAYREADY
+      packageName:
+        type: string
+        description: 'Package name in predefined destination profile. Current available options: HLS-fMP4, DASH.'
+    name: PackagingProperties
+  com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipeUpdateRequest:
+    properties:
+      name:
+        type: string
+        description: update the name of the Cloud Source
+    name: LivePipeUpdateRequest
+  com.harmonicinc.vos.app.saas.live.model.destination.PublishingPoint:
+    properties:
+      hostname:
+        type: string
+        description: rtmp push to host with this hostname
+      password:
+        type: string
+        description: password required to push to the host
+        readOnly: true
+      port:
+        type: integer
+        description: TCP port number of the push destination
+        format: int32
+      streamName:
+        type: string
+        description: stream name (streamKey) of the rtmp publishing point
+      username:
+        type: string
+        description: username required to push to the host
+    name: PublishingPoint
+  com.harmonicinc.vos.drm.rest.drmtoday.model.response.SharedSecretResponseConfig:
+    properties:
+      description:
+        type: string
+      enabled:
+        type: boolean
+      id:
+        type: string
+      name:
+        type: string
+    name: SharedSecretResponseConfig
+  com.harmonicinc.vos.app.configure.model.Image:
+    required:
+      - url
+    properties:
+      id:
+        type: string
+        description: Unique identifier of an image file
+      labels:
+        type: array
+        description: Labels are used to specify identifying metadata
+        items:
+          type: string
+      lastModified:
+        type: integer
+        format: int64
+        description: Date of image last modification on remote server
+      password:
+        type: string
+        description: Password to use with the file server
+      url:
+        type: string
+        description: URL to download the image
+      username:
+        type: string
+        description: Username to use with the file server
+    name: Image
+  com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipe:
+    properties:
+      backupIngress:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.pipe.LrsIngress'
+      ingress:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.pipe.LrsIngress'
+      labels:
+        type: array
+        description: text labels used for query
+        items:
+          type: string
+      maxOutputConnections:
+        type: integer
+        format: int32
+        description: maximum number of output connections to the Cloud Source.  Once the Cloud Source has reached maximum output connections, additional connection requests will be rejected.
+      monitorUrl:
+        type: string
+        description: URL where pulling of Cloud Source output for monitoring purpose
+      name:
+        type: string
+        description: name of the Cloud Source
+      pipeId:
+        type: string
+        description: id of the Cloud Source.  This is used for live event source input.
+      redundancyMode:
+        type: string
+        description: input redundancy is enabled or not.  Active-Active and Active-Standby are supported for SRT
+      state:
+        type: string
+        description: state of the Cloud Source.  ONLINE is administrative online.  OFFLINE is administrative offline.  When it is offline, the input endpoint is not reachable.
+        enum:
+          - ONLINE
+          - OFFLINE
+          - UNKNOWN
+      statistics:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.statistics.CombinedLrsStatistics'
+      version:
+        type: string
+        description: Cloud Source datapath software version
+    name: LivePipe
+  com.harmonicinc.externalassetpotf.model.rest.storage.StorageAccount:
+    required:
+      - connectionString
+      - id
+    properties:
+      connectionString:
+        type: string
+        description: A string includes the authorization information required for the app to access data in storage account
+      id:
+        type: string
+        description: ID of storage account. Value will be used to construct egress URL
+    name: StorageAccount
+  com.harmonicinc.vos.syndicate.cloud.hms.model.CryptoSetting:
+    properties:
+      key:
+        type: string
+        description: the passphrase for SRT encryption. minimum 10 and maximum 79 characters long  
+      method:
+        type: string
+        description: SRT encryption key length
+        enum:
+          - AES_128
+          - AES_192
+          - AES_256
+          - NO_ENCRYPTION
+    name: CryptoSetting
+  com.harmonicinc.vos.drm.rest.drmtoday.model.FairplayCertificateConfig:
+    properties:
+      applicationSecretKey:
+        type: string
+      defaultIV:
+        type: string
+      providerCertificate:
+        type: string
+      providerPrivateKey:
+        type: string
+    name: FairplayCertificateConfig
+  com.harmonicinc.vos.app.saas.live.model.LiveEventUpdateRequest:
+    required:
+      - input
+      - name
+      - output
+    properties:
+      addons:
+        description: addon for optional features
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventAddons'
+      input:
+        description: liveEvent Cloud Source
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.source.LiveSource'
+      inputLossSlate:
+        description: slate image to cover the screen when input signal loss when transcoding is in used
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.InputLossSlate'
+      labels:
+        type: array
+        description: multiple labels to label the event
+        items:
+          type: string
+      liveSlate:
+        description: slate image to cover the screen when event is live. Use action to trigger slate on/off. (insertSlate and removeSlate).
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveSlate'
+      liveTranscription:
+        description: speech to text transcription to insert to CEA608/708
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveTranscription'
+      name:
+        type: string
+        example: College Football Final 2023
+        description: simple name of the Event
+      output:
+        type: array
+        description: list of packages profile configuration
+        items:
+          $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.LiveDestination'
+      packagingProfile:
+        type: string
+        example: STANDARD
+        enum:
+          - STANDARD
+          - PREMIUM
+      publishName:
+        type: string
+        example: footballFinal2023
+        description: Name used in the URLs to identify the event. This needs to be unique and no space and special characters
+        minLength: 1
+        maxLength: 30
+      transcodingProfile:
+        type: string
+        enum:
+          - STANDARD
+          - PREMIUM
+          - PASSTHROUGH
+    name: LiveEventUpdateRequest
+  com.harmonicinc.vos.drm.rest.model.DrmProfile:
+    properties:
+      drmTodayVendorData:
+        $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.DrmTodayVendorData'
+      fairPlayConfigured:
+        type: boolean
+      id:
+        type: string
+      profileName:
+        type: string
+      vendorType:
+        type: string
+        enum:
+          - DRMToday
+    name: DrmProfile
+  com.harmonicinc.vos.app.saas.live.model.source.LiveSource:
+    required:
+      - cloudSourceId
+    properties:
+      cloudSourceId:
+        type: string
+        description: Cloud Source Id
+    name: LiveSource
+  com.harmonicinc.vos.app.saas.live.model.destination.DestinationUrls:
+    properties:
+      cdnUrls:
+        description: list of CDN URL endpoints
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PlaybackUrl'
+      originUrls:
+        description: list of Origin URL endpoints
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PlaybackUrl'
+    name: DestinationUrls
+  com.harmonicinc.vos.app.saas.live.model.source.LiveSourceDetails:
+    required:
+      - cloudSourceId
+    properties:
+      cloudSourceId:
+        type: string
+        description: Cloud Source Id
+    name: LiveSourceDetails
+  com.harmonicinc.vos.app.saas.live.model.LiveEventCreateRequest:
+    required:
+      - input
+      - name
+      - output
+    properties:
+      addons:
+        description: addon for optional features
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventAddons'
+      input:
+        description: liveEvent Cloud Source
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.source.LiveSource'
+      inputLossSlate:
+        description: slate image to cover the screen when input signal loss when transcoding is in used
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.InputLossSlate'
+      labels:
+        type: array
+        description: multiple labels to label the event
+        items:
+          type: string
+      liveSlate:
+        description: slate image to cover the screen when event is live. Use action to trigger slate on/off. (insertSlate and removeSlate).
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveSlate'
+      liveTranscription:
+        description: speech to text transcription to insert to CEA608/708
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveTranscription'
+      name:
+        type: string
+        example: College Football Final 2023
+        description: simple name of the Event
+      output:
+        type: array
+        description: list of packages profile configuration
+        items:
+          $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.LiveDestination'
+      publishName:
+        type: string
+        example: footballFinal2023
+        description: Name used in the URLs to identify the event. This needs to be unique and no space and special characters
+        minLength: 1
+        maxLength: 30
+      transcodingProfile:
+        type: string
+        description: the transcoding profile of the event.  STANDARD profile has max of 720p output, PREMIUM has 1080p output, PASSTHROUGH is packaging only for multi-bitrate input
+        enum:
+          - STANDARD
+          - PREMIUM
+          - PASSTHROUGH
+    name: LiveEventCreateRequest
+  com.harmonicinc.vos.app.unifiedoriginengine.streamingendpoint.CapacityConfig:
+    properties:
+      maxStreamingUnits:
+        description: maximum number of streaming units that the origin will scale up to
+        type: integer
+        format: int32
+      minStreamingUnits:
+        description: minmum number of streaming units that the origin will scale down to
+        type: integer
+        format: int32
+    name: CapacityConfig
+  com.harmonicinc.vos.app.saas.live.model.destination.PreviewUrls:
+    properties:
+      dashUrl:
+        description: internal preview URL with DASH output for vos.io UI 
+        type: string
+        readOnly: true
+      hlsFmp4Url:
+        description: internal preview URL with HLS fMP4 output for vos.io UI       
+        type: string
+        readOnly: true
+      hlsTsUrl:
+        description: internal preview URL with HLS TS output for vos.io UI   
+        type: string
+        readOnly: true
+    name: PreviewUrls
+  com.harmonicinc.vos.app.saas.live.cloud.pipe.model.LivePipeCreateRequest:
+    properties:
+      cryptoSetting:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.CryptoSetting'
+      labels:
+        type: array
+        description: text labels used for query
+        items:
+          type: string
+      maxOutputConnections:
+        description: maximum number of output connections to the Cloud Source. Once the Cloud Source has reached maximum output connections, additional connection requests will be rejected.
+        type: integer
+        format: int32
+      name:
+        description: name of the Cloud Source
+        type: string
+      protocol:
+        description: Cloud Source input protocol configured. One of RTMP, SRT
+        type: string
+        enum:
+          - SRT
+          - RTMP
+      redundancyMode:
+        description: input redundancy is enabled or not. Active_Active and Active_Standby are supported for SRT
+        type: string
+        enum:
+          - NONE
+          - ACTIVE_STANDBY
+          - ACTIVE_ACTIVE
+      streamCount:
+        description: the number of streams configured for this Cloud Source. This is used for multi-bitrate input where several bitrate profiles are received by a single Cloud Source, each with its own stream key (RTMP) or stream id (SRT)
+        type: integer
+        format: int32
+    name: LivePipeCreateRequest
+  com.harmonicinc.vos.app.saas.live.model.destination.RtmpPushConfig:
+    required:
+      - enableActiveStandby
+      - enableRtmps
+    properties:
+      enableActiveStandby:
+        description: enable Active Standby RTMP push
+        type: boolean
+      enableRtmps:
+        description: enable RTMPS (TLS)
+        type: boolean
+      primaryPublishingPoint:
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PublishingPoint'
+      secondaryPublishingPoint:
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PublishingPoint'
+    name: RtmpPushConfig
+  com.harmonicinc.externalassetpotf.model.rest.profile.PackagingProfileBasic:
+    required:
+      - cacheMaxAge
+      - packagingPropertiesList
+    properties:
+      cacheMaxAge:
+        type: integer
+        format: int32
+        description: The max-age value for HTTP cache control header - maximum amount of time in seconds content should be cached
+      packagingPropertiesList:
+        type: array
+        description: List of packages which are enabled for egress. Package will be disabled if it is not specified in the list. Set to null to enable all available packages.
+        items:
+          $ref: '#/definitions/com.harmonicinc.externalassetpotf.model.rest.profile.PackagingProperties'
+    name: PackagingProfileBasic
+  com.harmonicinc.vos.app.unifiedoriginengine.rest.OriginEngineStatus:
+    required:
+      - activeStreamingUnits
+      - avgActiveConnection
+      - numInstances
+      - requestsPerSecond
+      - throughputForClearContentKiloBitsPerSecond
+      - throughputForDrmContentKiloBitsPerSecond
+      - throughputKiloBitsPerSecond
+    properties:
+      activeStreamingUnits:
+        type: integer
+        format: int32
+        description: Current egress capacity in streaming unit
+      avgActiveConnection:
+        type: integer
+        format: int32
+        description: Number of nginx active connections per second over the last 5-second sample period
+      httpErrors:
+        type: integer
+        format: int32
+        description: Number of HTTP errors over the last 5-second sample period
+      maxResponseGenTimeInMs:
+        type: number
+        format: double
+        description: Max upstream response time recorded in the last 5-second sample period. Measured by time spent on receiving the response from the upstream server
+      maxResponseTimeInMs:
+        type: number
+        format: double
+        description: Max request processing time recorded in the last 5-second sample period. Measured by the time elapsed between the first request bytes were read and the last response bytes were sent
+      numInstances:
+        type: integer
+        format: int32
+        description: Number of load-balanced nodes currently running
+      requestsPerSecond:
+        type: number
+        format: double
+        description: Request rate in the last 5-second sample period
+      throughputForClearContentKiloBitsPerSecond:
+        type: number
+        format: double
+        description: Rate of data sent in Kbps for non-DRM-enabled content over the last 5-second sample period
+      throughputForDrmContentKiloBitsPerSecond:
+        type: number
+        format: double
+        description: Rate of data sent in Kbps for DRM-enabled content over the last 5-second sample period
+      throughputKiloBitsPerSecond:
+        type: number
+        format: double
+        description: Rate of data sent in Kbps (1K=1000) over the last 5-second sample period
+      timeshiftStorage:
+        description: Status of time-shift storage
+        $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.rest.OriginEngineStatus$StorageStatus'
+      vodStorage:
+        description: Status of VOD or long lasting catch up storage
+        $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.rest.OriginEngineStatus$StorageStatus'
+    name: OriginEngineStatus
+  com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.DrmTodayVendorData:
+    properties:
+      customerRightsTokenData:
+        $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.CustomerRightsTokenData'
+      sharedSecretData:
+        $ref: '#/definitions/com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.SharedSecretData'
+    name: DrmTodayVendorData
+  com.harmonicinc.vos.app.unifiedoriginengine.streamingendpoint.StreamingEndpointConfig:
+    properties:
+      egressCapacity:
+        $ref: '#/definitions/com.harmonicinc.vos.app.unifiedoriginengine.streamingendpoint.CapacityConfig'
+    name: StreamingEndpointConfig
+  com.harmonicinc.vos.app.saas.live.model.destination.LiveDestination:
+    required:
+      - destinationOutputId
+      - packageType
+    properties:
+      destinationOutputId:
+        description: uuid of the destination output
+        type: string
+      embeddedSubtitle:
+        description: output subtitle format.  PASSTHROUGH means manifest signals if there is CEA608/708 subtitle in the video stream. 
+        type: string
+        enum:
+          - PASSTHROUGH
+          - WEBVTT
+          - IMSC1
+      encryptionMethod:
+        description: encryption method of the media
+        type: string
+        enum:
+          - CLEAR
+          - AES
+          - FAIRPLAY
+          - CENC
+      packageType:
+        description: package type for the output
+        type: string
+        enum:
+          - HLS_TS
+          - HLS_FMP4
+          - DASH
+          - RTMP_PUSH
+      resourceId:
+        description: DRM resource Id for the output
+        type: string
+        readOnly: true
+      rtmpPushConfig:
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.RtmpPushConfig'
+    name: LiveDestination
+  com.harmonicinc.vos.app.saas.live.model.LiveEvent:
+    required:
+      - endTime
+      - goLiveTime
+      - id
+      - input
+      - name
+      - output
+      - publishName
+    properties:
+      addons:
+        description: addon for optional features
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventAddons'
+      endTime:
+        type: string
+        description: Live Event recording end time
+      goLiveTime:
+        type: string
+        description: Live Event recording start time
+      id:
+        description: id of the Live Event
+        type: string
+        example: 34fd01fc-fee6-11ed-be56-0242ac120002
+        readOnly: true
+      input:
+        description: liveEvent Cloud Source
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.source.LiveSource'
+      inputLossSlate:
+        description: slate image to cover the screen when input signal loss when transcoding is in used
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.InputLossSlate'
+      internalPreviewUrls:
+        description: List of preview URLs for internal usage only
+        readOnly: true
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PreviewUrls'
+      labels:
+        type: array
+        description: multiple labels to label the event
+        items:
+          type: string
+      liveSlate:
+        description: slate image to cover the screen when event is live. Use action to trigger slate on/off. (insertSlate and removeSlate).
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveSlate'
+      liveTranscription:
+        description: speech to text transcription to insert to CEA608/708
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveTranscription'
+      name:
+        type: string
+        example: College Football Final 2023
+        description: simple name of the Event
+      output:
+        type: array
+        description: list of packages profile configuration
+        items:
+          $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.LiveDestination'
+      playbackUrls:
+        description: List of playback URLs
+        readOnly: true
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.DestinationUrls'
+      previewUrls:
+        description: List of preview URLs
+        readOnly: true
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.destination.PreviewUrls'
+      publishName:
+        type: string
+        example: footballFinal2023
+        description: Name used in the URLs to identify the event. This needs to be unique and no space and special characters
+        minLength: 1
+        maxLength: 30
+      state:
+        type: string
+        example: Preview
+        description: liveEvent state.  refer to the state diagram in vos.io documentation
+        readOnly: true
+        enum:
+          - OFFLINE
+          - ALLOCATING
+          - PREVIEW
+          - ERROR
+          - LIVE
+          - FINISHED
+      transcodingProfile:
+        description: transcoding profile of the live event.  STANDARD max resolution is 720p, PREMIUM max resolutin profile is 1080p, PASSTHROUGH is used for packaging only with multi-bitrate input 
+        type: string
+        enum:
+          - STANDARD
+          - PREMIUM
+          - PASSTHROUGH
+    name: LiveEvent
+  com.harmonicinc.vos.app.saas.live.model.LiveSlate:
+    properties:
+      imageId:
+        description: the uuid of the image to be inserted covering video when triggered
+        type: string
+      state:
+        description: state of the live slate insertion.  ON means image covering video.  OFF means no image is covering video
+        type: string
+        readOnly: true
+        enum:
+          - 'ON'
+          - 'OFF'
+    name: LiveSlate
+  com.harmonicinc.vos.app.saas.live.model.LiveEventAddons:
+    properties:
+      logoAddon:
+        description: Logo insertion add-on
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.LiveEventLogoAddon'
+    name: LiveEventAddons
+  com.harmonicinc.vos.syndicate.cloud.hms.model.statistics.CombinedLrsStatistics:
+    properties:
+      egressStatistics:
+        $ref: '#/definitions/com.harmonicinc.vos.syndicate.cloud.hms.model.statistics.CombinedEgressStatistics'
+    name: CombinedLrsStatistics
+  com.harmonicinc.vos.app.saas.live.model.InputLossSlate:
+    required:
+      - enableInputLossSlate
+    properties:
+      enableInputLossSlate:
+        description: enable input signal loss slate. image will be displayed if the input has no packet received for 1s.
+        type: boolean
+      imageId:
+        description: the uuid of the image that will be used. refer to /live/v1/images resource.
+        type: string
+    name: InputLossSlate
+  com.harmonicinc.vos.drm.rest.drmtoday.model.response.MerchantMetadata:
+    properties:
+      merchant:
+        type: string
+    name: MerchantMetadata
+  com.harmonicinc.vos.app.saas.live.model.LiveEventLogoAddon:
+    properties:
+      horizontalOffset:
+        type: integer
+        format: int32
+        description: Horizontal offset relative to placement in pixel
+      imageId:
+        type: string
+        description: Id of an image in the system
+      placement:
+        type: string
+        description: Image placement
+        enum:
+          - BOTTOM_LEFT
+          - BOTTOM_RIGHT
+          - TOP_LEFT
+          - TOP_RIGHT
+      verticalOffset:
+        type: integer
+        format: int32
+        description: Vertical offset relative to placement in pixel
+    name: LiveEventLogoAddon
+  com.harmonicinc.vos.app.saas.live.model.LiveEventDetails:
+    required:
+      - endTime
+      - goLiveTime
+      - id
+      - input
+      - name
+    properties:
+      endTime:
+        type: string
+        description: Live Event recording end time
+      goLiveTime:
+        type: string
+        description: Live Event recording start time
+      id:
+        type: string
+        description: Unique identifier of a event
+        readOnly: true
+      input:
+        description: Live Event Cloud Source
+        $ref: '#/definitions/com.harmonicinc.vos.app.saas.live.model.source.LiveSourceDetails'
+      name:
+        type: string
+        description: Display name of a event
+      state:
+        type: string
+        description: State of a event
+        readOnly: true
+        enum:
+          - OFFLINE
+          - ALLOCATING
+          - PREVIEW
+          - ERROR
+          - LIVE
+          - FINISHED
+    name: LiveEventDetails
+  com.harmonicinc.vos.syndicate.cloud.hms.model.statistics.CombinedEgressStatistics:
+    properties:
+      egressSessionCount:
+        type: integer
+        format: int32
+        description: Cloud Source egress SRT connection count
+      egressThroughputInMbps:
+        type: number
+        format: double
+        description: Cloud Source egress throughput in Mbps
+    name: CombinedEgressStatistics
+  com.harmonicinc.vos.drm.rest.drmtoday.model.CustomerRightsTokenConfig:
+    properties:
+      description:
+        type: string
+      template:
+        type: object
+      uuid:
+        type: string
+    name: CustomerRightsTokenConfig
+  com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.SharedSecretData:
+    properties:
+      secretIdList:
+        type: array
+        items:
+          type: string
+    name: SharedSecretData
+  com.harmonicinc.vos.app.saas.live.model.LiveTranscription:
+    required:
+      - enableLiveTranscription
+    properties:
+      enableLiveTranscription:
+        type: boolean
+      language:
+        type: string
+    name: LiveTranscription
+  com.harmonicinc.vos.drm.rest.model.vendor.drmtoday.CustomerRightsTokenData:
+    properties:
+      crtUuidList:
+        type: array
+        items:
+          type: string
+    name: CustomerRightsTokenData
